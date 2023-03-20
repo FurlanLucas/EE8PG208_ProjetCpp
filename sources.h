@@ -13,7 +13,7 @@ public:
   int addDate; // Item's date of addition (general library)
   int year; // Item's year of production/written/recording
   int totalNumber; // Total number of this item in the library
-  int dispNumber; // Total number of this item that are disponible.
+  int dispNumber; // Total number of this item that are available.
 
 // Public methods for the class
 public:

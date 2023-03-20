@@ -13,6 +13,6 @@ digital::digital(int reference_, std::string autor_, std::string title_,
 
 void digital::showData(){
   std::cout << "This item (code " << reference << ") is a " << year <<
-  " " << format << "file by" << autor << " called \"" << title <<
-  "available in " << link << ".\n";
+  " " << format << " file by " << autor << "\ncalled \"" << title <<
+  "\navailable in " << link << ".\n";
 };
