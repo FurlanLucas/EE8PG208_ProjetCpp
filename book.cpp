@@ -14,6 +14,6 @@ book::book(int reference_, std::string autor_, std::string title_,
 
 void book::showData(){
   std::cout << "This item (code " << reference << ") is a " << year <<
-  " book by " << autor << " called \"" << title << "\", published by " <<
+  " book by " << autor << " called \"" << title << "\",\npublished by " <<
   editor << " with " << pagesNumber << " pages. " << summary << ".\n";
 };
