@@ -1,7 +1,7 @@
-#include "sources.h"
+#include "source.h"
 #include <iostream>
 
-sources::sources(int reference_, std::string autor_, std::string title_,
+source::source(int reference_, std::string autor_, std::string title_,
     int addDate_, int year_, int totalNumber_, int dispNumber_){
 
   reference = reference_;
@@ -13,11 +13,11 @@ sources::sources(int reference_, std::string autor_, std::string title_,
   dispNumber = dispNumber_;
 };
 
-void sources::showDispNumber(){
+void source::showDispNumber(){
   std::cout << "There are " << dispNumber << " units." << "\n";
 };
 
-void sources::showTotalNumber(){
+void source::showTotalNumber(){
   std::cout << "There are " << totalNumber << " in total." << "\n";
 };
 
