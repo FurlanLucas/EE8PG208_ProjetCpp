@@ -2,9 +2,9 @@
 #define CD_H
 
 #include <string>
-#include "sources.h"
+#include "media.h"
 
-class CD : public sources {
+class CD : public media {
 private:
   int timeDuration; //  Time duration (seconds)
   std::string production; // Production's house name

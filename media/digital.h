@@ -2,9 +2,9 @@
 #define DIGITAL_H
 
 #include <string>
-#include "sources.h"
+#include "media.h"
 
-class digital : public sources {
+class digital : public media {
 private:
   std::string format; // Title of the book's collection
   int size; // Editor's name;

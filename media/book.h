@@ -2,9 +2,9 @@
 #define BOOK_H
 
 #include <string>
-#include "sources.h"
+#include "media.h"
 
-class book : public sources {
+class book : public media {
 public:
   int pagesNumber; // Book page number
   std::string collection; // Title of the book's collection

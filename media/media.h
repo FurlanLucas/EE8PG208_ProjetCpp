@@ -3,7 +3,7 @@
 
 #include <string>
 
-class sources {
+class media {
 
 // Public attribures for the class
 public:
@@ -17,7 +17,7 @@ public:
 
 // Public methods for the class
 public:
-  sources(int reference_, std::string autor_, std::string title_,
+  media(int reference_, std::string autor_, std::string title_,
           int addDate_, int year_, int totalNumber_, int dispNumber_);
   void showTotalNumber();
   void showDispNumber();
