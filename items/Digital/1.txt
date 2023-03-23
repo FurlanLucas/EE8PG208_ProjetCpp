@@ -1,0 +1,9 @@
+Janick V. Frasch
+An Auto-generated Nonlinear MPC Algorithm for Real-Time ObstacleAvoidance of Ground Vehicles
+63
+2013
+1
+1
+pdf
+345
+https://www.researchgate.net/publication/261435899_An_auto-generated_nonlinear_MPC_algorithm_for_real-time_obstacle_avoidance_of_ground_vehicles#fullTextFileContent
