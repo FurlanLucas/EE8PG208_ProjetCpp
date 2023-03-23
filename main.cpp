@@ -4,6 +4,7 @@
 #include "media/digital.h"
 #include "media/paper.h"
 #include "media/VHS.h"
+#include "media/DVD.h"
 
 int main(){
   std::cout << "Initializing main...\n\n\n";
@@ -20,11 +21,16 @@ int main(){
     "Editor Inc. R", 549);
   VHS myFirstVHS(4556, "Michael Jackson", "First album (live in NY)", 69, 2005,
     1, 0, 246, "Sounds and music Inc. productions");
+  DVD myFirstDVD(4556, "Michael Jackson", "First album (live in NY)", 69, 2005,
+    1, 0, 246, "Sounds and music Inc. productions", 2611);
+
 
   myFirstBook.showData();
   myFirstCD.showData();
   myFirstDigital.showData();
   myFirstPaper.showData();
+  myFirstVHS.showData();
+  myFirstDVD.showData();
 
   std::cout << "\n\n";
 
