@@ -47,3 +47,7 @@ void media::lendItem(){
 void media::returnItem(){
   dispNumber++;
 }
+
+int media::getDispNumber(){
+  return dispNumber;
+}

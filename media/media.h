@@ -27,6 +27,7 @@ public:
   void removeItem();
   void lendItem();
   void returnItem();
+  int getDispNumber();
 
   //virtual void takeData();
 };
