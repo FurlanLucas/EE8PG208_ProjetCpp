@@ -5,7 +5,7 @@
 #include "media.h"
 
 class VHS : public media {
-public:
+protected:
   int timeDuration; //  Time duration (seconds)
   std::string production; // Production's house name
 

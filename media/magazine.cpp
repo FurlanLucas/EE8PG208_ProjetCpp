@@ -1,7 +1,7 @@
 #include <iostream>
-#include "paper.h"
+#include "magazine.h"
 
-paper::paper(int reference_, std::string autor_, std::string title_,
+magazine::magazine(int reference_, std::string autor_, std::string title_,
   int addDate_, int year_, int totalNumber_, int dispNumber_, int pagesNumber_,
   std::string collection_, std::string summary_, std::string editor_,
   int artNumber_)
@@ -10,7 +10,7 @@ paper::paper(int reference_, std::string autor_, std::string title_,
   , artNumber(artNumber_){
 }
 
-void paper::showData(){
+void magazine::showData(){
   std::cout << "This item (code " << reference << ") is a " << year <<
   " book by " << autor << " called \"" << title << "\",\npublished by " <<
   editor << " with " << pagesNumber << " pages. " << summary << ".\n";

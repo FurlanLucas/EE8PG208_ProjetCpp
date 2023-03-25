@@ -6,7 +6,7 @@
 class media {
 
 // Public attribures for the class
-public:
+protected:
   int reference; // Reference code for the item in the general lybrary
   std::string autor; // Autor's name
   std::string title; // Item'a name
@@ -17,12 +17,18 @@ public:
 
 // Public methods for the class
 public:
+  media();
   media(int reference_, std::string autor_, std::string title_,
           int addDate_, int year_, int totalNumber_, int dispNumber_);
   void showTotalNumber();
   void showDispNumber();
   void displayDate();
+  void addItem();
+  void removeItem();
+  void lendItem();
+  void returnItem();
 
+  //virtual void takeData();
 };
 
 #endif

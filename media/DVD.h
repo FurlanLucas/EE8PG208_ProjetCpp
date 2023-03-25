@@ -5,7 +5,7 @@
 #include "VHS.h"
 
 class DVD : public VHS {
-public:
+private:
   int trackNumber; // Book page number
 
 public:

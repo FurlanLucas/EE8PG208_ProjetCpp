@@ -5,7 +5,7 @@
 #include "media.h"
 
 class book : public media {
-public:
+protected:
   int pagesNumber; // Book page number
   std::string collection; // Title of the book's collection
   std::string editor; // Editor's name;
