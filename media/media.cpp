@@ -51,3 +51,32 @@ void media::returnItem(){
 int media::getDispNumber(){
   return dispNumber;
 }
+
+int media::getTotalNumber(){
+  return dispNumber;
+}
+
+void media::showData(){}
+
+std::string media::getAutor(){
+  return autor;
+}
+
+std::string media::getTitle(){
+  return title;
+}
+
+int media::getReference(){
+  return reference;
+}
+
+
+int media::searchFor(std::string toSearch){
+  std::size_t foundAutor = autor.find(toSearch);
+  std::size_t foundTitle = title.find(toSearch);
+  if(foundTitle!=std::string::npos || foundAutor!=std::string::npos){
+    return 1;
+  } else {
+    return 0;
+  }
+}

@@ -1,7 +1,7 @@
 b
 154683
 Jan R. Wright & Jonathan E. Cooper
-INTRODUCTION TO AIRCRAFT AEROELASTICITY AND LOADS
+Introduction to aircraft aeroelasticity and loads
 65
 2015
 4

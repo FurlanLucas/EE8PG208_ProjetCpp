@@ -1,5 +1,5 @@
 b
-1549633
+154963
 Hugo
 The world in our hands
 24
@@ -8,5 +8,5 @@ The world in our hands
 2
 240
 Best books of Hugo
-Short story about a relationship that goes like a rollincoaster.
+Short story about a relationship that goes like a roller coaster.
 Editor Inc. R

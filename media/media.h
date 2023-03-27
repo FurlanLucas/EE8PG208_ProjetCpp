@@ -28,8 +28,13 @@ public:
   void lendItem();
   void returnItem();
   int getDispNumber();
+  int getTotalNumber();
+  virtual void showData();
+  std::string getAutor();
+  std::string getTitle();
+  int getReference();
+  int searchFor(std::string toSearch);
 
-  //virtual void takeData();
 };
 
 #endif
