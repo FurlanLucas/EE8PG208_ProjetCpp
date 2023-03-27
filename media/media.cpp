@@ -53,7 +53,7 @@ int media::getDispNumber(){
 }
 
 int media::getTotalNumber(){
-  return TotalNumber;
+  return totalNumber;
 }
 
 void media::showData(){}
