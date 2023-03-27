@@ -1,6 +1,12 @@
 #include "library.h"
 
 
+library::library(){
+  itemsNumber = 0;
+  items = new media;
+}
+
+
 int library::loadItems(){
   // Variable declarions
   DIR *folder;
@@ -120,19 +126,30 @@ media *library::itemFromFile(std::string fileName){
 
 
 int library::addItem(){
-  itemsNumber++; // increment the number of items in the library
-  media *newList = new media[itemsNumber]; // create a new list of items
-
-  // update the list
-  for(int i=0;i<itemsNumber-1;i++)
-    newList[i] = items[i];
-
   try{
     // create the new element (test)
     media newElement = *itemFromFile("items/favor.txt");
+    addItem(&newElement);
+    return 0;
+  }
+  catch(int myNumber){
+    std::cout << "Error appending the new value." << std::endl;
+    return 1;
+  }
+}
+
+
+int library::addItem(media *itemToAdd){
+  itemsNumber++; // increment the number of items in the library
+  media *newList = new media[itemsNumber]; // create a new list of items
+
+  for(int i=0; i<itemsNumber-1; i++)
+    newList[i] = items[i];
+
+  try{
 
     items = newList;
-    items[itemsNumber-1] = newElement;
+    items[itemsNumber-1] = *itemToAdd;
     return 0;
   }
   catch(int myNumber){
@@ -143,16 +160,36 @@ int library::addItem(){
 
 
 void library::showItems(){
-  std::cout << "  Item number  Reference  \t\t Title \t\t\t\t  Autor" <<
-            "\t\t\t\t\t Number available \t\t\t\t\t Type of item" << std::endl;
+  std::cout << "  N    Reference  \t Title \t\t\t\t\t Autor" <<
+            "\t\t\t\t        Number \t\t Type" << std::endl;
   for(int i=0; i<itemsNumber;i++){
     std::string title = items[i].getTitle() + "                             " +
                                               "                             " ;
     std::string autor = items[i].getAutor() + "                             " +
                                               "                             " ;
-    std::cout << "     [" << i+1 << "]\t"<< items[i].getReference() << "\t\t" <<
-      title.substr(0, 40) << "\t" << autor.substr(0, 40) << "\t\t" <<
-      items[i].getDispNumber() << "/" << items[i].getDispNumber() << "\t" <<
+    std::cout << " [" << i+1 << "]\t"<< items[i].getReference() << "\t" <<
+      title.substr(0, 40) << "\t" << autor.substr(0, 40) << "   " <<
+      items[i].getDispNumber() << "/" << items[i].getTotalNumber() << "\t\t" <<
       typeid(items[i]).name() << std::endl;
   }
+
+  std::cout << "\n\n";
+}
+
+
+library *library::search(std::string nameToSearch){
+  // Creat a library for the results
+  library *results = new library;
+
+  // Search in currant library the matches
+  for(int i=0; i<itemsNumber; i++){
+    // if it is fund, add the item to results
+    if(items[i].searchFor(nameToSearch)){
+      std::cout << "ITEM FOUND\n\n";
+      results->addItem(&items[i]);
+    }
+  }
+
+  // Return results
+  return results;
 }

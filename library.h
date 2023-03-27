@@ -24,15 +24,16 @@ public:
   media * items;
 
 public:
+  library();
   int loadItems();
   int displayItems();
-  //void getDispNumber();
-  media * search(std::string fileName);
   int addItem();
   void showItems();
-
+  library *search(std::string nameToSearch);
+  
 private:
   media * itemFromFile(std::string fileName);
+  int addItem(media *itemToAdd);
 };
 
 #endif
