@@ -1,4 +1,3 @@
-#include <iostream>
 #include "VHS.h"
 
 VHS::VHS(int reference_, std::string autor_, std::string title_, int addDate_,
@@ -10,6 +9,7 @@ VHS::VHS(int reference_, std::string autor_, std::string title_, int addDate_,
 }
 
 void VHS::showData(){
+  // Function to display all the important info in class (for debug only).
   std::cout << "This item (code " << reference << ") is a " << year <<
   " CD by " << autor << " called \"" << title << "\",\nproduced by " <<
   production << ".\n";

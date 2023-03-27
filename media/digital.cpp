@@ -1,4 +1,3 @@
-#include <iostream>
 #include "digital.h"
 
 digital::digital(int reference_, std::string autor_, std::string title_,
@@ -11,6 +10,7 @@ digital::digital(int reference_, std::string autor_, std::string title_,
 }
 
 void digital::showData(){
+  // Function to display all the important info in class (for debug only).
   std::cout << "This item (code " << reference << ") is a " << year <<
   " " << format << " file by " << autor << "\ncalled \"" << title <<
   "\navailable in " << link << ".\n";

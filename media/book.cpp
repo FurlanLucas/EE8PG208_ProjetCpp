@@ -1,4 +1,3 @@
-#include <iostream>
 #include "book.h"
 
 book::book(int reference_, std::string autor_, std::string title_,
@@ -9,9 +8,11 @@ book::book(int reference_, std::string autor_, std::string title_,
   , collection(collection_)
   , editor(editor_)
   , summary(summary_){
+
 }
 
 void book::showData(){
+  // Function to display all the important info in class (for debug only).
   std::cout << "This item (code " << reference << ") is a " << year <<
   " book by " << autor << " called \"" << title << "\",\npublished by " <<
   editor << " with " << pagesNumber << " pages. " << summary << ".\n";

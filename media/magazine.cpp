@@ -1,4 +1,3 @@
-#include <iostream>
 #include "magazine.h"
 
 magazine::magazine(int reference_, std::string autor_, std::string title_,
@@ -11,6 +10,7 @@ magazine::magazine(int reference_, std::string autor_, std::string title_,
 }
 
 void magazine::showData(){
+  // Function to display all the important info in class (for debug only).
   std::cout << "This item (code " << reference << ") is a " << year <<
   " book by " << autor << " called \"" << title << "\",\npublished by " <<
   editor << " with " << pagesNumber << " pages. " << summary << ".\n";

@@ -4,8 +4,8 @@ Paulo Henriques Iscold Andrade de Oliveira
 Introduction to loads in aircrafts
 89
 2010
-0
 2
+0
 170
 None
 Esta apostila, elaborada para atender o curso de Introdução às Cargas nas Aeronaves do Programa de Especialização em Engenharia da Empresa Brasileira de Aeronáutica – EMBRAER – tem como objetivo apresentar ao aluno de engenharia mecânica / aeronáutica os conceitos básicos acerca da determinação das cargas atuantes sobre aeronaves durante sua operação. Sua concepção é bastante sistemática, não se compondo como um livro texto, mas sim como um roteiro de estudos e uma coleção de informações úteis para a capacitação do engenheiro de cargas. Por se tratar de uma ferramenta para formação e estudo, seu conteúdo sofre mudanças e adicionamentos constantes. Novas informações são acrescentadas à medida que novas dúvidas são apresentadas pelos estudantes que o utilizam. Pode-se observar que nesta edição constam ainda alguns trechos manuscritos, frutos de apresentações recentes que ainda não sofreram o processo de editoração.

@@ -1,82 +1,117 @@
 #include "media.h"
-#include <iostream>
 
 media::media(){};
 
+
 media::media(int reference_, std::string autor_, std::string title_,
-    int addDate_, int year_, int totalNumber_, int dispNumber_)
-    : reference(reference_)
-    , autor(autor_)
-    , title(title_)
-    , addDate(addDate_)
-    , year(year_)
-    , totalNumber(totalNumber_)
-    , dispNumber(dispNumber_)
-    {};
-
-void media::showDispNumber(){
-  std::cout << "There are " << dispNumber << " units disponible." << "\n";
+  int addDate_, int year_, int totalNumber_, int dispNumber_)
+  : reference(reference_)
+  , autor(autor_)
+  , title(title_)
+  , addDate(addDate_)
+  , year(year_)
+  , totalNumber(totalNumber_)
+  , dispNumber(dispNumber_)
+  {
 };
 
-void media::showTotalNumber(){
-  std::cout << "There are " << totalNumber << " in total." << "\n";
-};
 
-void media::displayDate(){
-  std::cout << "The item was produced in " << year << ".\n";
-};
-
-void media::addItem(){
+void media::addItem(void){
+  // Function to add a item to the total number.
   totalNumber++;
   dispNumber++;
 };
 
-void media::removeItem(){
-  if(totalNumber > 1){
+
+int media::removeItem(void){
+  // Funcition to remove a item to the total number. Return 0 if an item has
+  // been removed sucessfully and 1 if an error occurred.
+
+  if((totalNumber > 1) && dispNumber>0){
     totalNumber--;
     dispNumber--;
+    return 0;
+  }
+  else{
+    return 1;
   }
 };
 
-void media::lendItem(){
-  if (dispNumber >= 1){
-    dispNumber--;
+
+int media::lendItem(void){
+  // Function to lend a item to a user. It reduces the available number by one.
+  // It returns 0 if it was sucessfully executated and 0 if it was not.
+  if (dispNumber > 0){
+    dispNumber++;
+    return 0;
+  }
+  else{
+    return 1;
   }
 }
 
-void media::returnItem(){
-  dispNumber++;
-}
 
-int media::getDispNumber(){
+int media::getDispNumber(void){
+  // Get the dispNumber
   return dispNumber;
 }
 
-int media::getTotalNumber(){
+
+int media::getTotalNumber(void){
+  // Get the total number
   return totalNumber;
 }
 
-void media::showData(){}
 
-std::string media::getAutor(){
+void media::showData(void){}
+
+
+std::string media::getAutor(void){
+  // Get autors name
   return autor;
 }
 
-std::string media::getTitle(){
+
+std::string media::getTitle(void){
+  // Get item's title
   return title;
 }
 
-int media::getReference(){
+
+int media::getReference(void){
+  // Get item's reference
   return reference;
 }
 
 
 int media::searchFor(std::string toSearch){
-  std::size_t foundAutor = autor.find(toSearch);
-  std::size_t foundTitle = title.find(toSearch);
-  if(foundTitle!=std::string::npos || foundAutor!=std::string::npos){
-    return 1;
-  } else {
-    return 0;
-  }
+  // Function to research the informartion in the class. Recives a string to
+  // search for and returns 1 if it was found any candidate and 0 if it wasn't.
+
+  // Convert the autors name to lower case to compare
+  std::string newAutor = toLowercase(autor);
+  std::string newTitle = toLowercase(title);
+
+  // Try to find the string input
+  std::size_t foundAutor = newAutor.find(toLowercase(toSearch));
+  std::size_t foundTitle = newTitle.find(toLowercase(toSearch));
+
+  // Verify if it was found
+  if(foundTitle!=std::string::npos || foundAutor!=std::string::npos)
+    return 1; // Candidate found
+  return 0; // Candidate not found
+}
+
+
+std::string media::toLowercase(std::string inputString){
+  // Function to change all the caractheres to lower case. Used in searchFor
+  // function. For inter use only.
+
+	for(int i=0;inputString[i]!='\0';i++){
+    //checking for uppercase characters
+		if (inputString[i] >= 'A' && inputString[i] <= 'Z')
+			inputString[i] = inputString[i] + 32; //converting uppercase to lowercase
+	}
+
+	return inputString;
 }

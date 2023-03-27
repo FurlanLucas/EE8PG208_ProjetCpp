@@ -1,4 +1,3 @@
-#include <iostream>
 #include "CD.h"
 
 CD::CD(int reference_, std::string autor_, std::string title_, int addDate_,
@@ -11,6 +10,7 @@ CD::CD(int reference_, std::string autor_, std::string title_, int addDate_,
 }
 
 void CD::showData(){
+  // Function to display all the important info in class (for debug only).
   std::cout << "This item (code " << reference << ") is a " << year <<
   " CD by " << autor << " called \"" << title << "\",\nproduced by " <<
   production << " with " << trackNumber << " tracks.\n";

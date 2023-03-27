@@ -1,40 +1,53 @@
+// Media main class for library software implementation. Presented at Bordeaux
+// INP at EE8PG208 Projet C++.
+//
+// Created by Lucas Furlan
+// -----------------------------------------------------------------------------
+
 #ifndef SOURCE_H
 #define SOURCE_H
 
 #include <string>
+#include <iostream>
 
 class media {
 
-// Public attribures for the class
+// Atributes for the class -----------------------------------------------------
 protected:
-  int reference; // Reference code for the item in the general lybrary
+  int reference;     // Reference code for the item in the general lybrary
   std::string autor; // Autor's name
   std::string title; // Item'a name
-  int addDate; // Item's date of addition (general library)
-  int year; // Item's year of production/written/recording
-  int totalNumber; // Total number of this item in the library
-  int dispNumber; // Total number of this item that are available.
+  int addDate;       // Item's date of addition (general library)
+  int year;          // Item's year of production/written/recording
+  int totalNumber;   // Total number of this item in the library
+  int dispNumber;    // Total number of this item that are available.
 
-// Public methods for the class
+// Methodes for the class ------------------------------------------------------
 public:
+  // Constructors
   media();
   media(int reference_, std::string autor_, std::string title_,
           int addDate_, int year_, int totalNumber_, int dispNumber_);
-  void showTotalNumber();
-  void showDispNumber();
-  void displayDate();
-  void addItem();
-  void removeItem();
-  void lendItem();
-  void returnItem();
-  int getDispNumber();
-  int getTotalNumber();
-  virtual void showData();
-  std::string getAutor();
-  std::string getTitle();
-  int getReference();
-  int searchFor(std::string toSearch);
 
+  // Get member methods
+  int getDispNumber(void);    // Get the available number
+  int getTotalNumber(void);   // Get the total number of the article
+  std::string getAutor(void); // Get the autor's name
+  std::string getTitle(void); // Get the title's name
+  int getReference(void);     // Get the code referece
+
+  // For user methods
+  void addItem(void);     // Add a new item (increase the totalNumber)
+  int  removeItem(void);  // Remove a item (decrease the totalNumber)
+  int  lendItem(void);    // Lend a item to a user (decrease the dispNumber)
+  void returnItem(void);  // Return a item (increase the dispNumber)
+
+  virtual void showData(void); // Show data in the class (for children imp.)
+  int searchFor(std::string toSearch); // Search for a name in the class info.
+
+protected:
+  std::string toLowercase(std::string inputString); // Transform to lowecase
+  
 };
 
 #endif
