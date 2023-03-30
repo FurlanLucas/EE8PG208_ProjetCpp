@@ -24,6 +24,8 @@
 // Constant definitions --------------------------------------------------------
 #define DIRNAME "items" // Folder name to be loaded
 #define MAXITEMS 2000   // Max number of items in the library
+#define CAR_TITLE 50    // Number of characters to display the item's name
+#define CAR_AUTHOR 30   // Number of characters to display the item's author
 
 class library {
 // Class member variables
@@ -39,15 +41,15 @@ private:
 public:
   library(void);             // Constructor
   int addItem(void);         // Function to add item from a user input
-  int displayItems(void);    // Display items in the currant library
   int getItemsNumber(void);  // Get the current items number
   int loadItems(void);       // Load items from a file
   library *search(std::string nameToSearch); // Search for a word or expression
   void showItems(void);      // Show all items in the library
-
+  int save(void);            // Save all the items to the database in txt files
 
 private:
   media * itemFromFile(std::string fileName); // Create a item from a fileName
+  int toFile(media *item);                    // Save a item to a file
   int addItem(media *itemToAdd);              // Add a item to the library
 };
 
