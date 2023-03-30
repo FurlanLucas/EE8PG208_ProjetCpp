@@ -61,7 +61,7 @@ media *library::itemFromFile(std::string fileName){
   std::ifstream myfile;   // txt file to be open
   char itemType;          // Type of the item to be read
   int reference;          // Item's code of reference
-  std::string autor;      // Autor
+  std::string author;     // Autor
   std::string title;      // Ttem's name
   int addDate;            // Item's inclusion date
   int year;               // Item's year of creation
@@ -86,7 +86,7 @@ media *library::itemFromFile(std::string fileName){
   if (myfile.is_open()) {
     myfile >> itemType; // Read the item type (first line)
     myfile >> reference; // Read the reference code (int)
-    myfile.ignore(1, '\n'); getline(myfile, autor); // Read the autors name
+    myfile.ignore(1, '\n'); getline(myfile, author); // Read the autors name
     getline(myfile, title); // Read title
     myfile >> addDate; // Read the addition date
     myfile >> year; // Read the items year of creation
@@ -100,7 +100,7 @@ media *library::itemFromFile(std::string fileName){
         myfile.ignore(1, '\n'); getline(myfile, collection);
         getline(myfile, editor);
         getline(myfile, summary);
-        return new book(reference,autor,title,addDate,year,totalNumber,
+        return new book(reference,author,title,addDate,year,totalNumber,
           dispNumber,pagesNumber,collection,editor,summary);
 
       case('m'): // If it is a magazine
@@ -109,34 +109,34 @@ media *library::itemFromFile(std::string fileName){
         getline(myfile, editor);
         getline(myfile, summary);
         myfile >> artNumber;
-        return new magazine(reference,autor,title,addDate,year,totalNumber,
+        return new magazine(reference,author,title,addDate,year,totalNumber,
           dispNumber,pagesNumber,collection,editor,summary,artNumber);
 
       case('C'): // If it is a CD
         myfile >> timeDuration;
         myfile.ignore(1, '\n'); getline(myfile, production);
         myfile >> trackNumber;
-        return new CD(reference,autor,title,addDate,year,totalNumber,
+        return new CD(reference,author,title,addDate,year,totalNumber,
           dispNumber,timeDuration,production,trackNumber);
 
       case('d'): // If it is a digital ressource
         myfile.ignore(1, '\n'); getline(myfile, format);
         myfile >> size;
         myfile.ignore(1, '\n'); getline(myfile, link);
-        return new digital(reference,autor,title,addDate,year,totalNumber,
+        return new digital(reference,author,title,addDate,year,totalNumber,
           dispNumber,format,size,link);
 
       case('V'): // If it is a VHS
         myfile >> timeDuration;
         myfile.ignore(1, '\n'); getline(myfile, production);
-        return new VHS(reference,autor,title,addDate,year,totalNumber,
+        return new VHS(reference,author,title,addDate,year,totalNumber,
           dispNumber,timeDuration,production);
 
       case('D'): // If it is a DVD
         myfile >> timeDuration;
         myfile.ignore(1, '\n'); getline(myfile, production);
         myfile >> trackNumber;
-        return new DVD(reference,autor,title,addDate,year,totalNumber,
+        return new DVD(reference,author,title,addDate,year,totalNumber,
           dispNumber,timeDuration,production,trackNumber);
     }
 
@@ -195,19 +195,19 @@ void library::showItems(void){
   // (any user may call).
 
   // Label display
-  std::cout << "  N    Reference  \t Title \t\t\t\t\t Autor" <<
-            "\t\t\t\t        Number \t\t Type" << std::endl;
+  std::cout << "  N \t Reference \t Title \t\t\t\t\t\t\t Autor \t\t\t\t\t" <<
+            "Number \t Year \t Type" << std::endl;
 
   // Item display
   for(int i=0; i<itemsNumber;i++){
-    std::string title = items[i].getTitle() + "                             " +
-                                              "                             " ;
-    std::string autor = items[i].getAutor() + "                             " +
-                                              "                             " ;
-    std::cout << " [" << i+1 << "]\t"<< items[i].getReference() << "\t" <<
-      title.substr(0, 40) << "\t" << autor.substr(0, 40) << "   " <<
-      items[i].getDispNumber() << "/" << items[i].getTotalNumber() << "\t\t" <<
-      typeid(items[i]).name() << std::endl;
+    std::string title = items[i].getTitle() +
+		"                                                              " ;
+    std::string author = items[i].getAuthor() +
+		"                                                              " ;
+    std::cout << " [" << i+1 << "] \t "<< items[i].getReference() << " \t "
+      << title.substr(0, CAR_TITLE) << " \t " << author.substr(0, CAR_AUTHOR)
+      << " \t" << items[i].getDispNumber() << "/" << items[i].getTotalNumber()
+      << " \t " << items[i].getYear() << " \t " << typeid(*items).name() << "\n";
   }
 
   std::cout << "\n\n";
@@ -235,7 +235,50 @@ library *library::search(std::string nameToSearch){
 }
 
 
-int library::getItemsNumber(){
+int library::getItemsNumber(void){
   // Function to get the currant itemsNumber variable.
   return itemsNumber;
+}
+
+
+int library::save(void){
+  // Function to save each item in the library to a separate txt file. The function
+  // will return 0 if it was sucessfully executed and 1 if it was not.
+
+  for (int i=0; i<itemsNumber; i++){
+    // Check if a file has not been saved correctly
+    if(toFile(&items[i])){
+      std::cout << "Error saving the " << i << "th item" << std::endl;
+      return 1;
+    }
+  }
+
+  // If it reaches that line, all items were well saved.
+  return 0;
+}
+
+
+int library::toFile(media *item){
+  // Function that saves a item in a file. Recives a pointer to a item that is to be saved
+  // in a txt format and returns 0 if the item was sucessfully saved or 1 if it was not.
+
+  // Item file name
+  std::string fileName = (std::string)DIRNAME + "/" + std::to_string(item->getReference())
+    + "_" + item->getTitle().substr(0, 10) + "_" + item->getAuthor().substr(0, 10);
+
+  // Out file  
+  std::ofstream outFile;
+  outFile.open(fileName + ".txt");
+
+  // Check if the file has been opened
+  if(!outFile){
+    std::cout << "Out file for  " << item->getReference() << " item could not be opened\n";
+    return 1;
+  }
+
+  // Write to the out file   
+  outFile << item->getFileInfo() << std::endl;
+
+  // Output return
+  return 0;
 }
