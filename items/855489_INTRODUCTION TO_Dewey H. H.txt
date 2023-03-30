@@ -9,4 +9,4 @@ INTRODUCTION TO STRUCTURAL DYNAMICS AND AEROELASTICITY, SECOND EDITION
 247
 None
 This text provides an introduction to structural dynamics and aeroelasticity, with an emphasis on conventional aircraft. The primary areas considered are structural dynamics, static aeroelasticity, and dynamic aeroelasticity. The structural dynamics material emphasizes vibration, the modal representation, and dynamic response. Aeroelastic phenomena discussed include divergence, aileron reversal, airload redistribution, unsteady aerodynamics, flutter, and elastic tailoring. More than one hundred illustrations and tables help clarify the text, and more than fifty problems enhance student learning. This text meets the need for an up-to-date treatment of structural dynamics and aeroelasticity for advanced undergraduate or beginning graduate aerospace engineering students.
-cambridge university press
+Cambridge university press

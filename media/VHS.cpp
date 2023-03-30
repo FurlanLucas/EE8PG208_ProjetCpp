@@ -21,7 +21,7 @@ std::string VHS::getFileInfo(void){
   // this article to be saved in a txt file. It's used in "toFile" function at 
   // "library" class.
   
-  return "d\n" + std::to_string(reference) + "\n" + author + "\n" + title + "\n"
+  return "V\n" + std::to_string(reference) + "\n" + author + "\n" + title + "\n"
     + std::to_string(addDate) + "\n" + std::to_string(year) + "\n" + 
     std::to_string(totalNumber) + "\n" + std::to_string(dispNumber) + "\n" + 
     std::to_string(timeDuration) + "\n" + production;

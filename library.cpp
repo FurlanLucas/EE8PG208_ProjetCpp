@@ -2,9 +2,18 @@
 
 
 library::library(void){
-  // Class constructor, initialize the attributes with zeros items inside
+  // Class constructor, initialize the attributes with zeros items inside.
   itemsNumber = 0;
-  items = new media;
+  dirName = (std::string) DIRNAME;
+  items = new media*; 
+
+}
+
+
+library::library(std::string folderName) : dirName(folderName){
+  // Class constructor, initialize the attributes with zeros items inside.
+  itemsNumber = 0;
+  items = new media*; 
 }
 
 
@@ -30,7 +39,8 @@ int library::loadItems(void){
       "exceed the maximum possible." << std::endl;
     return 1;
   }
-  items = new media[itemsNumber]; // Create the new media pointer
+
+  items = new media*[itemsNumber];
 
   if (folder) { // If it is possible to opfile the directory
     // Reset the pointer to the first file and ignore '.' and '..'
@@ -38,9 +48,8 @@ int library::loadItems(void){
 
     // Open each one of the files and charges the info
     for(int i = 0;(cfile = readdir(folder)) != NULL; i++) {
-      std::string fileName = (std::string)DIRNAME + "/" +
-                             (std::string)cfile->d_name;
-      items[i] = *itemFromFile(fileName);
+      std::string fileName = dirName + "/" + (std::string)cfile->d_name;
+      items[i] = itemFromFile(fileName);
     }
     closedir(folder); //close all directory
     return 0;
@@ -150,7 +159,9 @@ media *library::itemFromFile(std::string fileName){
 
 
 int library::addItem(void){
-  // Function to add a item to the library for a user.
+  // Function to add a item to the library. Creates another vector of items and
+  // replaces the old one.
+
   try{
     // create the new element (test)
     media newElement = *itemFromFile("items/favor.txt");
@@ -171,16 +182,16 @@ int library::addItem(media *itemToAdd){
   // append, use the addItem(void).
 
   itemsNumber++; // Increment the number of items in the library
-  media *newList = new media[itemsNumber]; // Create a new list of items
+  media **newList = new media*[itemsNumber]; // Create a new list of items
 
   // Copie all the old variables to the new vector
-  for(int i=0; i<itemsNumber-1; i++)
+  for(int i=0; i<itemsNumber-1; i++){
     newList[i] = items[i];
+  }
 
   // Try to append the new value
   try{
-    items = newList; // Replace the media pointer
-    items[itemsNumber-1] = *itemToAdd; // Add the new item
+    items[itemsNumber-1] = itemToAdd; // Add the new item
     return 0;
   }
   catch(int error){
@@ -195,19 +206,25 @@ void library::showItems(void){
   // (any user may call).
 
   // Label display
-  std::cout << "  N \t Reference \t Title \t\t\t\t\t\t\t Autor \t\t\t\t\t" <<
+  std::cout << "\n\n  N \t Reference \t Title \t\t\t\t\t\t\t Autor \t\t\t\t\t" <<
             "Number \t Year \t Type" << std::endl;
+  
+  if(itemsNumber==0){
+    std::cout << "It is not possible to show items within a empty library.\n";
+    return;
+  }
 
   // Item display
   for(int i=0; i<itemsNumber;i++){
-    std::string title = items[i].getTitle() +
+    std::string title = items[i]->getTitle() +
 		"                                                              " ;
-    std::string author = items[i].getAuthor() +
+    std::string author = items[i]->getAuthor() +
 		"                                                              " ;
-    std::cout << " [" << i+1 << "] \t "<< items[i].getReference() << " \t "
+    std::string type = typeid(*(items[i])).name();
+    std::cout << " [" << i+1 << "] \t "<< items[i]->getReference() << " \t "
       << title.substr(0, CAR_TITLE) << " \t " << author.substr(0, CAR_AUTHOR)
-      << " \t" << items[i].getDispNumber() << "/" << items[i].getTotalNumber()
-      << " \t " << items[i].getYear() << " \t " << typeid(*items).name() << "\n";
+      << " \t" << items[i]->getDispNumber() << "/" << items[i]->getTotalNumber()
+      << " \t " << items[i]->getYear() << " \t " << type.substr(1, 8) << "\n";
   }
 
   std::cout << "\n\n";
@@ -227,8 +244,8 @@ library *library::search(std::string nameToSearch){
   // Search in currant library the matches
   for(int i=0; i<itemsNumber; i++){
     // if it is fund, add the item to results
-    if(items[i].searchFor(nameToSearch))
-      results->addItem(&items[i]);
+    if(items[i]->searchFor(nameToSearch))
+      results->addItem(items[i]);
   }
 
   return results; // Return results
@@ -247,7 +264,7 @@ int library::save(void){
 
   for (int i=0; i<itemsNumber; i++){
     // Check if a file has not been saved correctly
-    if(toFile(&items[i])){
+    if(toFile(items[i])){
       std::cout << "Error saving the " << i << "th item" << std::endl;
       return 1;
     }
@@ -259,12 +276,15 @@ int library::save(void){
 
 
 int library::toFile(media *item){
-  // Function that saves a item in a file. Recives a pointer to a item that is to be saved
-  // in a txt format and returns 0 if the item was sucessfully saved or 1 if it was not.
+  // Function that saves a item in a file. Recives a pointer to a item that is to
+  // be saved in a txt format and returns 0 if the item was sucessfully saved or 
+  // 1 if it was not.
 
   // Item file name
-  std::string fileName = (std::string)DIRNAME + "/" + std::to_string(item->getReference())
-    + "_" + item->getTitle().substr(0, 10) + "_" + item->getAuthor().substr(0, 10);
+  std::string fileName = (std::string) DIRNAME + "/" + 
+    std::to_string(item->getReference()) + "_" + 
+    item->getTitle().substr(0, CAR_TITLE_TXT) +  "_" + 
+    item->getAuthor().substr(0, CAR_AUTHOR_TXT);
 
   // Out file  
   std::ofstream outFile;
@@ -272,7 +292,8 @@ int library::toFile(media *item){
 
   // Check if the file has been opened
   if(!outFile){
-    std::cout << "Out file for  " << item->getReference() << " item could not be opened\n";
+    std::cout << "File for item" << item->getReference() << " could not be opened." 
+      << std::endl;
     return 1;
   }
 
@@ -282,3 +303,7 @@ int library::toFile(media *item){
   // Output return
   return 0;
 }
+
+
+
+

@@ -22,30 +22,33 @@
 #include "media/VHS.h"
 
 // Constant definitions --------------------------------------------------------
-#define DIRNAME "items" // Folder name to be loaded
-#define MAXITEMS 2000   // Max number of items in the library
-#define CAR_TITLE 50    // Number of characters to display the item's name
-#define CAR_AUTHOR 30   // Number of characters to display the item's author
+#define DIRNAME "items"   // Folder name to be loaded
+#define MAXITEMS 2000     // Max number of items in the library
+#define CAR_TITLE 50      // Number of characters to display the item's name
+#define CAR_AUTHOR 30     // Number of characters to display the item's author
+#define CAR_TITLE_TXT 15  // Number of title characters present in file name
+#define CAR_AUTHOR_TXT 10 // Number of author characters present in file name
 
 class library {
 // Class member variables
 
 private:
   int itemsNumber; // Number of items in the library
-  media * items;   // Pointer to a media obeject that point to the first item
-
+  media **items;   // Pointer to a media obeject that point to the first item
+  std::string dirName; // Name of the folder that contains the items
 
 // ----------------------------------------------------------------------------
 // Class member functions
 
 public:
-  library(void);             // Constructor
-  int addItem(void);         // Function to add item from a user input
-  int getItemsNumber(void);  // Get the current items number
-  int loadItems(void);       // Load items from a file
+  library(void);                    // Constructor
+  library(std::string folderName);  // Constructor if another folder name
+  int addItem(void);                // Function to add item from a user input
+  int getItemsNumber(void);         // Get the current items number
   library *search(std::string nameToSearch); // Search for a word or expression
-  void showItems(void);      // Show all items in the library
-  int save(void);            // Save all the items to the database in txt files
+  void showItems(void);             // Show all items in the library
+  int save(void);             // Save all the items to the database in txt files
+  int loadItems(void);              // Load items from a file
 
 private:
   media * itemFromFile(std::string fileName); // Create a item from a fileName

@@ -26,5 +26,6 @@ std::string book::getFileInfo(void){
   return "b\n" + std::to_string(reference) + "\n" + author + "\n" + title + "\n"
     + std::to_string(addDate) + "\n" + std::to_string(year) + "\n" + 
     std::to_string(totalNumber) + "\n" + std::to_string(dispNumber) + "\n" + 
-    collection + "\n" + summary + "\n" + editor;
+    std::to_string(pagesNumber) + "\n" + collection + "\n" + summary + "\n" + 
+    editor;
 }
