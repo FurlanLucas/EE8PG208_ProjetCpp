@@ -30,7 +30,7 @@ int library::loadItems(void){
 
   // Count the total number of items to load
   itemsNumber = 0;   // Items in the object will be overwrited
-  while ((cfile = readdir(folder)) != NULL){itemsNumber++;}
+  while ((cfile = readdir(folder)) != NULL){ itemsNumber++; }
   itemsNumber = itemsNumber - 2;  // Will not take the '.' and '..'
 
   // Check the number of number of items
@@ -192,10 +192,12 @@ int library::addItem(media *itemToAdd){
   // Try to append the new value
   try{
     items[itemsNumber-1] = itemToAdd; // Add the new item
+    delete[] newList;
     return 0;
   }
   catch(int error){
     std::cout << "Error appending the new value." << std::endl;
+    delete[] newList;
     return 1;
   }
 }
@@ -281,9 +283,8 @@ int library::toFile(media *item){
   // 1 if it was not.
 
   // Item file name
-  std::string fileName = (std::string) DIRNAME + "/" + 
-    std::to_string(item->getReference()) + "_" + 
-    item->getTitle().substr(0, CAR_TITLE_TXT) +  "_" + 
+  std::string fileName = dirName + "/" + std::to_string(item->getReference()) + 
+    "_" +  item->getTitle().substr(0, CAR_TITLE_TXT) +  "_" + 
     item->getAuthor().substr(0, CAR_AUTHOR_TXT);
 
   // Out file  
@@ -305,5 +306,44 @@ int library::toFile(media *item){
 }
 
 
+int library::removeItem(int itemToRemove){
+  // This function creates a new items list of medias without a especific
+  // item given by its positin in the corrent library, i.e. "itemToRemove". 
+  // Returns 0 if the function was executed sucessfully or 1 if it was not.
+
+  // Creates the new vector
+  itemsNumber--;
+  media **newList = new media*[itemsNumber]; // Create a new list of items
+
+  // Removes the file from the current directory
+  std::string fileName = dirName + "/" + 
+    std::to_string(items[itemToRemove]->getReference()) + "_" +  
+    items[itemToRemove]->getTitle().substr(0, CAR_TITLE_TXT) +  "_" + 
+    items[itemToRemove]->getAuthor().substr(0, CAR_AUTHOR_TXT) + ".txt";
+  if(remove(fileName.c_str()) != 0){
+    std::cout << "Error removing the file" << std::endl;
+    return 1;
+  }
+
+  // Copy all items to the new array
+  try{
+    int j=0;
+    for(int i=0; i<itemsNumber+1; i++){
+      if(i==itemToRemove)
+        continue;
+      newList[j] = items[i];
+      j++;
+    }
+    items = newList;
+    delete[] newList;
+  }
+  catch(int error){
+    std::cout << "Error coping the items' array." << std::endl;
+    return 1;
+  }
+
+  // Ending
+  return 0;
+}
 
 

@@ -7,7 +7,6 @@ int main(){
   library myLibrary;
 
   // Try to load the library
-  // Load files
   if(!myLibrary.loadItems()) {
     std::cout << "Loaded sucessfully " << myLibrary.getItemsNumber() <<
       " items." << std::endl;
@@ -15,18 +14,26 @@ int main(){
   else{
     std::cout << "Failled to load files." << std::endl;
   }
-
-  // Show the items
   myLibrary.showItems(); 
-  myLibrary.addItem();
+
+
+  // Remove all items
+  if(!myLibrary.removeItem(7)) {
+    std::cout << "Removed sucessfully 1 items." << std::endl;
+  }
+  else{
+    std::cout << "Failled to remove files." << std::endl;
+  }
   myLibrary.showItems();
 
-  // Do a research
-  library * results = myLibrary.search("Introduction");
-  results->showItems();
 
-  library *results2 = results->search("loads");
+  // Do a research
+  library * results1 = myLibrary.search("Introduction");
+  results1->showItems();
+
+  library *results2 = results1->search("loads");
   results2->showItems();
+
 
   // Save all items
   if(!myLibrary.save()) {
@@ -36,4 +43,6 @@ int main(){
   else{
     std::cout << "Failled to save files." << std::endl;
   }
+
+  return 0;
 }
