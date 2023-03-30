@@ -311,6 +311,13 @@ int library::removeItem(int itemToRemove){
   // item given by its positin in the corrent library, i.e. "itemToRemove". 
   // Returns 0 if the function was executed sucessfully or 1 if it was not.
 
+  // Check it the item existes
+  if (itemToRemove>itemsNumber-1){
+    std::cout << "There is no item n. " << itemToRemove << "in the libr"
+      << "ary" << std::endl;
+    return 1;
+  }
+
   // Creates the new vector
   itemsNumber--;
   media **newList = new media*[itemsNumber]; // Create a new list of items
