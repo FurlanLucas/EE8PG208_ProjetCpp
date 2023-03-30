@@ -3,22 +3,23 @@
 #include "library.h"
 
 int main(){
-  std::cout << "Initializing main...\n\n";
+  std::cout << "Initializing main...\n";
   library myLibrary;
 
+  // Try to load the library
+  // Load files
   if(!myLibrary.loadItems()) {
     std::cout << "Loaded sucessfully " << myLibrary.getItemsNumber() <<
       " items." << std::endl;
   }
   else{
-    std::cout << "failled to load files." << std::endl;
+    std::cout << "Failled to load files." << std::endl;
   }
-  myLibrary.showItems(); // Show the items
 
-  // Add a new item and show
+  // Show the items
+  myLibrary.showItems(); 
   myLibrary.addItem();
-  myLibrary.showItems(); // Show the items
-
+  myLibrary.showItems();
 
   // Do a research
   library * results = myLibrary.search("Introduction");
@@ -27,4 +28,12 @@ int main(){
   library *results2 = results->search("loads");
   results2->showItems();
 
+  // Save all items
+  if(!myLibrary.save()) {
+    std::cout << "Save sucessfully " << myLibrary.getItemsNumber() <<
+      " items." << std::endl;
+  }
+  else{
+    std::cout << "Failled to save files." << std::endl;
+  }
 }
