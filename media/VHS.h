@@ -19,10 +19,11 @@ protected:
   std::string production; // Production's house name
 
 public:
-  VHS(int reference_, std::string autor_, std::string title_, int addDate_,
+  VHS(int reference_, std::string author_, std::string title_, int addDate_,
     int year_, int totalNumber_, int dispNumber_, int timeDuration_,
     std::string production_);
   void showData();  // Display all data in the class (for debug only)
+  std::string getFileInfo(void); // Get the info to be saved as a string
 };
 
 #endif

@@ -19,10 +19,11 @@ private:
   int trackNumber; // Book pages number
 
 public:
-  DVD(int reference_, std::string autor_, std::string title_, int addDate_,
+  DVD(int reference_, std::string author_, std::string title_, int addDate_,
       int year_, int totalNumber_, int dispNumber_, int timeDuration_,
       std::string production_, int trackNumber_);
   void showData();  // Display all data in the class (for debug only)
+  std::string getFileInfo(void); // Get the info to be saved as a string
 };
 
 #endif

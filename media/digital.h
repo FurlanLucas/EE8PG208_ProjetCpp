@@ -19,10 +19,11 @@ private:
   std::string link;   // Acess link
 
 public:
-  digital(int reference_, std::string autor_, std::string title_, int addDate_,
+  digital(int reference_, std::string author_, std::string title_, int addDate_,
     int year_, int totalNumber_, int dispNumber_, std::string format_,
     int size, std::string link);
   void showData(); // Display all data in the class (for debug only)
+  std::string getFileInfo(void); // Get the info to be saved as a string
 };
 
 #endif

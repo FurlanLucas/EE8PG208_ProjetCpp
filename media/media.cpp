@@ -3,10 +3,10 @@
 media::media(){};
 
 
-media::media(int reference_, std::string autor_, std::string title_,
+media::media(int reference_, std::string author_, std::string title_,
   int addDate_, int year_, int totalNumber_, int dispNumber_)
   : reference(reference_)
-  , autor(autor_)
+  , author(author_)
   , title(title_)
   , addDate(addDate_)
   , year(year_)
@@ -51,6 +51,11 @@ int media::lendItem(void){
 }
 
 
+void media::returnItem(void){
+  dispNumber++;
+}
+
+
 int media::getDispNumber(void){
   // Get the dispNumber
   return dispNumber;
@@ -63,12 +68,15 @@ int media::getTotalNumber(void){
 }
 
 
-void media::showData(void){}
-
-
-std::string media::getAutor(void){
+std::string media::getAuthor(void){
   // Get autors name
-  return autor;
+  return author;
+}
+
+
+int media::getYear(void){
+  // Get the item's year
+  return year;
 }
 
 
@@ -89,15 +97,15 @@ int media::searchFor(std::string toSearch){
   // search for and returns 1 if it was found any candidate and 0 if it wasn't.
 
   // Convert the autors name to lower case to compare
-  std::string newAutor = toLowercase(autor);
+  std::string newAuthor = toLowercase(author);
   std::string newTitle = toLowercase(title);
 
   // Try to find the string input
-  std::size_t foundAutor = newAutor.find(toLowercase(toSearch));
+  std::size_t foundAuthor = newAuthor.find(toLowercase(toSearch));
   std::size_t foundTitle = newTitle.find(toLowercase(toSearch));
 
   // Verify if it was found
-  if(foundTitle!=std::string::npos || foundAutor!=std::string::npos)
+  if(foundTitle!=std::string::npos || foundAuthor!=std::string::npos)
     return 1; // Candidate found
   return 0; // Candidate not found
 }
@@ -114,4 +122,9 @@ std::string media::toLowercase(std::string inputString){
 	}
 
 	return inputString;
+}
+
+
+std::string media::getFileInfo(void){
+  return "TEST";
 }
