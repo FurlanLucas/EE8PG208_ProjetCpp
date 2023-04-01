@@ -104,49 +104,49 @@ media *library::itemFromFile(std::string fileName){
 
     // Check the type of file (first letter)
     switch(itemType){
-      case('b'): // If it is a book
-        myfile >> pagesNumber;
-        myfile.ignore(1, '\n'); getline(myfile, collection);
-        getline(myfile, editor);
-        getline(myfile, summary);
-        return new book(reference,author,title,addDate,year,totalNumber,
-          dispNumber,pagesNumber,collection,editor,summary);
+    case('b'): // If it is a book
+      myfile >> pagesNumber;
+      myfile.ignore(1, '\n'); getline(myfile, collection);
+      getline(myfile, editor);
+      getline(myfile, summary);
+      return new book(reference,author,title,addDate,year,totalNumber,
+        dispNumber,pagesNumber,collection,editor,summary);
 
-      case('m'): // If it is a magazine
-        myfile >> pagesNumber;
-        myfile.ignore(1, '\n'); getline(myfile, collection);
-        getline(myfile, editor);
-        getline(myfile, summary);
-        myfile >> artNumber;
-        return new magazine(reference,author,title,addDate,year,totalNumber,
-          dispNumber,pagesNumber,collection,editor,summary,artNumber);
+    case('m'): // If it is a magazine
+      myfile >> pagesNumber;
+      myfile.ignore(1, '\n'); getline(myfile, collection);
+      getline(myfile, editor);
+      getline(myfile, summary);
+      myfile >> artNumber;
+      return new magazine(reference,author,title,addDate,year,totalNumber,
+        dispNumber,pagesNumber,collection,editor,summary,artNumber);
 
-      case('C'): // If it is a CD
-        myfile >> timeDuration;
-        myfile.ignore(1, '\n'); getline(myfile, production);
-        myfile >> trackNumber;
-        return new CD(reference,author,title,addDate,year,totalNumber,
-          dispNumber,timeDuration,production,trackNumber);
+    case('C'): // If it is a CD
+      myfile >> timeDuration;
+      myfile.ignore(1, '\n'); getline(myfile, production);
+      myfile >> trackNumber;
+      return new CD(reference,author,title,addDate,year,totalNumber,
+        dispNumber,timeDuration,production,trackNumber);
 
-      case('d'): // If it is a digital ressource
-        myfile.ignore(1, '\n'); getline(myfile, format);
-        myfile >> size;
-        myfile.ignore(1, '\n'); getline(myfile, link);
-        return new digital(reference,author,title,addDate,year,totalNumber,
-          dispNumber,format,size,link);
+    case('d'): // If it is a digital ressource
+      myfile.ignore(1, '\n'); getline(myfile, format);
+      myfile >> size;
+      myfile.ignore(1, '\n'); getline(myfile, link);
+      return new digital(reference,author,title,addDate,year,totalNumber,
+        dispNumber,format,size,link);
 
-      case('V'): // If it is a VHS
-        myfile >> timeDuration;
-        myfile.ignore(1, '\n'); getline(myfile, production);
-        return new VHS(reference,author,title,addDate,year,totalNumber,
-          dispNumber,timeDuration,production);
+    case('V'): // If it is a VHS
+      myfile >> timeDuration;
+      myfile.ignore(1, '\n'); getline(myfile, production);
+      return new VHS(reference,author,title,addDate,year,totalNumber,
+        dispNumber,timeDuration,production);
 
-      case('D'): // If it is a DVD
-        myfile >> timeDuration;
-        myfile.ignore(1, '\n'); getline(myfile, production);
-        myfile >> trackNumber;
-        return new DVD(reference,author,title,addDate,year,totalNumber,
-          dispNumber,timeDuration,production,trackNumber);
+    case('D'): // If it is a DVD
+      myfile >> timeDuration;
+      myfile.ignore(1, '\n'); getline(myfile, production);
+      myfile >> trackNumber;
+      return new DVD(reference,author,title,addDate,year,totalNumber,
+        dispNumber,timeDuration,production,trackNumber);
     }
 
     myfile.close(); // Close the txt file
@@ -354,3 +354,13 @@ int library::removeItem(int itemToRemove){
 }
 
 
+int library::lendItem(int itemToLend){
+  items[itemToLend]->lendItem();
+  return 0;
+}
+
+
+void library::showItemDes(int itemToShow){
+  // This function just returns display the description of an item
+  items[itemToShow]->showData();
+}

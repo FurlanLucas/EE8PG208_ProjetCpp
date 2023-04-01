@@ -49,7 +49,9 @@ public:
   void showItems(void);             // Show all items in the library
   int save(void);             // Save all the items to the database in txt files
   int loadItems(void);              // Load items from a file
-  int removeItem(int itemToRemove); //Function that removes an item
+  int removeItem(int itemToRemove); // Function that removes an item
+  int lendItem(int itemToLend);     // Function that lends an item
+  void showItemDes(int itemToShow); // Function that returns an specific item
 
 private:
   media * itemFromFile(std::string fileName); // Create a item from a fileName
