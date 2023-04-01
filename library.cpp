@@ -1,18 +1,18 @@
 #include "library.h"
 
 
-library::library(void){
+library::library(void) 
+  : dirName(ITEMS_DIRNAME)
+  , itemsNumber(0) {
   // Class constructor, initialize the attributes with zeros items inside.
-  itemsNumber = 0;
-  dirName = (std::string) DIRNAME;
   items = new media*; 
-
 }
 
 
-library::library(std::string folderName) : dirName(folderName){
+library::library(std::string folderName) 
+  : dirName(folderName)
+  , itemsNumber(0) {
   // Class constructor, initialize the attributes with zeros items inside.
-  itemsNumber = 0;
   items = new media*; 
 }
 
@@ -26,7 +26,13 @@ int library::loadItems(void){
   // Variable declarions
   DIR *folder;               // Folter variable to be loaded (see dirent.h)
   struct dirent *cfile;      // Pointer for the file in *folder (see dirent.h)
-  folder = opendir(DIRNAME); // Open all files in the directory
+  folder = opendir(dirName.c_str()); // Open all files in the directory
+
+  if (!folder) {// If it is possible to opfile the directory
+    std::cout << "It was not possible to open the directory " << dirName <<
+      std::endl;
+    return 1;
+  }
 
   // Count the total number of items to load
   itemsNumber = 0;   // Items in the object will be overwrited
@@ -39,26 +45,18 @@ int library::loadItems(void){
       "exceed the maximum possible." << std::endl;
     return 1;
   }
-
   items = new media*[itemsNumber];
 
-  if (folder) { // If it is possible to opfile the directory
-    // Reset the pointer to the first file and ignore '.' and '..'
-    rewinddir(folder); cfile = readdir(folder); cfile = readdir(folder);
+  // Reset the pointer to the first file and ignore '.' and '..'
+  rewinddir(folder); cfile = readdir(folder); cfile = readdir(folder);
 
-    // Open each one of the files and charges the info
-    for(int i = 0;(cfile = readdir(folder)) != NULL; i++) {
-      std::string fileName = dirName + "/" + (std::string)cfile->d_name;
-      items[i] = itemFromFile(fileName);
-    }
-    closedir(folder); //close all directory
-    return 0;
+  // Open each one of the files and charges the info
+  for(int i = 0;(cfile = readdir(folder)) != NULL; i++) {
+    std::string fileName = dirName + "/" + (std::string)cfile->d_name;
+    items[i] = itemFromFile(fileName);
   }
-  else { // If it was not possible to open the folder
-    std::cout << "It was not possible to open the directory " << DIRNAME <<
-      std::endl;
-    return 1;
-  }
+  closedir(folder); //close all directory
+  return 0;
 }
 
 

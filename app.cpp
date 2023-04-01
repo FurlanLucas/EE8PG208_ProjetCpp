@@ -1,7 +1,7 @@
 #include "app.h"
 
 
-app::app(){
+app::app(void){
     // First displays
     std::cout << "\nInitializing application." << std::endl;
     loadedLibrary = new library;
@@ -13,17 +13,12 @@ app::app(){
     else
         std::cout << "All items were loaded sucessfully." << std::endl;
 
+    isLogged = false;
 }
 
 
-int app::takeItem(){
-    // Function to lend an item from the library.
-    cLibrary->showItems();
-    std::cout << "Which item do you want to take ?" << std::endl;
-    int itemNumber;
-    std::cin >> itemNumber;
-    cLibrary->lendItem(itemNumber);
-    return 0;
+app::~app(){
+    std::cout << "Exiting application." << std::endl;
 }
 
 
@@ -40,7 +35,11 @@ int app::menu(){
         std::cout << "[2] Show all items" << std::endl;
         std::cout << "[3] Show items description" << std::endl;        
         std::cout << "[4] Return to general library" << std::endl;
-        std::cout << "[5] Exit" << std::endl;
+        if (isLogged)
+            std::cout << "[5] Logout" << std::endl;
+        else
+            std::cout << "[5] Login" << std::endl;
+        std::cout << "[6] Exit" << std::endl;
         std::cout << "\nEnter your option: ";
 
         // Take the option and check if it is a valid integer number
@@ -50,7 +49,7 @@ int app::menu(){
             std::cin.clear();
             std::cin.ignore(1000, '\n');
             std::cout << "Invalid type. If you want to exit the application," 
-            " tap 5. " << std::endl;
+            " tap 6. " << std::endl;
             continue;
         }
 
@@ -69,17 +68,26 @@ int app::menu(){
             cLibrary = new library;
             break;
         case 5:
-            std::cout << "Exiting the application." << std::endl;
+            if (isLogged){                
+                delete cUser;
+                isLogged = false;
+                std::cout << "Your are logged out." << std::endl;
+            }
+            else
+                login();
+            break;
+        case 6:
+            std::cout << "Exiting menu." << std::endl;
             return 0;          
         default:            
             std::cout << "Invalid choice. If you want to exit the " <<
-                "application, tap 5." << std::endl;
+                "application, tap 6." << std::endl;
             break;
         }
     }
 
     // Unreachable line (problem ocurred)
-    std::cout << "A problem ocurred during in menu options." << std::endl;
+    std::cout << "A problem ocurred in menu options." << std::endl;
     return 1;
 }
 
@@ -122,9 +130,11 @@ int app::search(){
     }
     catch(int errorN){
         std::cout << "Un error ocurred at the search function." << std::endl;
+        delete results;
         return 1;
     }
 
+    delete results;
     return 0;
 }
 
@@ -155,4 +165,85 @@ void app::showItemDescription(){
         else
             std::cout << "There is no such item in current library.\n";
     }
+}
+
+
+int app::login(){
+    // Function to make the login of an user. Returns 0 if the loggin
+    // ocurred sucessfully or 1 if it did not.
+
+    // Take the user's email
+    std::string email;
+    std::cout << "Enter with your e-mail: ";
+    std::cin >> email;
+
+    // Take the user's password
+    std::string password;
+    std::cout << "Enter with your password: ";
+    std::cin >> password;
+
+    // Search for the information within the users data
+    DIR *folder;               // Folter variable to be loaded (see dirent.h)
+    struct dirent *cfile;      // Pointer for the file in *folder (see dirent.h)
+    folder = opendir(USERS_DIRNAME); // Open all files in the directory
+    
+    if (!folder){
+        std::cout << "I was not possible open the folder." << std::endl;
+        return 1;
+    }
+
+    // Count the total number of users to load
+    int usersNumber = 0;
+    while ((cfile = readdir(folder)) != NULL){ usersNumber++; }
+    usersNumber = usersNumber - 2;  // Will not take the '.' and '..'
+
+    // Resets the pointer
+    rewinddir(folder); cfile = readdir(folder); cfile = readdir(folder);
+
+    // Search for the information within the users data
+    for (int i=0;i<usersNumber;i++) {
+        std::ifstream myfile;   // txt file to be open
+        cfile = readdir(folder);
+
+        // Checks if it is a client or a adm
+        std::string fileName = (std::string) USERS_DIRNAME + "/" + 
+            (std::string)cfile->d_name;
+        user *testUser;
+  
+        if(fileName.find("client")!=std::string::npos){
+            testUser = new client(fileName);                     
+        }  
+        else if(fileName.find("user")!=std::string::npos)
+            testUser = new adm(fileName); 
+        else {
+            std::cout << "Error reading users database." << std::endl;
+            return 1;
+        }
+
+        // Check if it is the correct ID;
+        if(testUser->checkID(email, password)){
+            std::cout << "Your are logged in." << std::endl;
+            isLogged = true;
+            cUser = testUser;
+            delete testUser;
+            closedir(folder);
+            return 0;
+        }
+
+    }
+
+    // If it reachs this point, no user were found
+    std::cout << "User not found." << std::endl;
+    return 0;
+}
+
+
+int app::takeItem(){
+    // Function to lend an item from the library.
+    cLibrary->showItems();
+    std::cout << "Which item do you want to take ?" << std::endl;
+    int itemNumber;
+    std::cin >> itemNumber;
+    cLibrary->lendItem(itemNumber);
+    return 0;
 }
