@@ -24,13 +24,17 @@ protected:
 // ----------------------------------------------------------------------------
 // Class member functions
 public:
-    user();
-    user(std::string nom, std::string prenom, std::string login);
-    std::string getName();
-    std::string getSurName();
-    std::string getEmail();
-    int checkID(std::string email_, std::string password_);
+    user();                 // Class constructor
+    user(std::string nom, std::string prenom, std::string login,
+        std::string password_);
+    std::string getName();          // Get user's name
+    std::string getSurName();       // Get user's surname
+    std::string getEmail();         // Get email
+    int checkID(std::string email_, std::string password_); // Check credentials
+    virtual int *getAttributes(void);
 
+protected:
+    std::string toUpperCase(std::string inputString);
 };
 
 

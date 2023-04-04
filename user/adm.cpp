@@ -1,8 +1,9 @@
 #include "adm.h"
 
 
-adm::adm(std::string name_, std::string surName_, std::string email_)
-    : user(name_, surName, email){
+adm::adm(std::string name_, std::string surName_, std::string email_,
+    std::string password_)
+    : user(name_, surName_, email_, password_){
 
 }
 

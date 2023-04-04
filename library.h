@@ -33,30 +33,32 @@ class library {
 
 // Class member variables
 private:
-  int itemsNumber; // Number of items in the library
-  media **items;   // Pointer to a media obeject that point to the first item
-  std::string dirName; // Name of the folder that contains the items
+    int itemsNumber; // Number of items in the library
+    media **items;   // Pointer to a media obeject that point to the first item
+    std::string dirName; // Name of the folder that contains the items
 
 
 // ----------------------------------------------------------------------------
 // Class member functions
 public:
-  library(void);                    // Constructor
-  library(std::string folderName);  // Constructor if another folder name
-  int addItem(void);                // Function to add item from a user input
-  int getItemsNumber(void);         // Get the current items number
-  library *search(std::string nameToSearch); // Search for a word or expression
-  void showItems(void);             // Show all items in the library
-  int save(void);             // Save all the items to the database in txt files
-  int loadItems(void);              // Load items from a file
-  int removeItem(int itemToRemove); // Function that removes an item
-  int lendItem(int itemToLend);     // Function that lends an item
-  void showItemDes(int itemToShow); // Function that returns an specific item
+    library(void);                    // Constructor
+    library(std::string folderName);  // Constructor if another folder name
+    int addItem(void);                // Function to add item from a user input
+    int getItemsNumber(void);         // Get the current items number
+    int lendItem(int itemToLend);     // Function that lends an item
+    int loadItems(void);              // Load items from a file
+    int save(void);             // Save all the items to the database in txt files
+    library *search(std::string nameToSearch); // Search for a word or expression
+    library *partition(int *refInputs); // Take a part of the library given by ref.
+    void showItems(void);             // Show all items in the library
+    void showItemDes(int itemToShow); // Function that returns an specific item
+    int removeItem(int itemToRemove); // Function that removes an item 
+    int addItem(media *itemToAdd);    // Add a item to the library
 
-private:
-  media * itemFromFile(std::string fileName); // Create a item from a fileName
-  int toFile(media *item);                    // Save a item to a file
-  int addItem(media *itemToAdd);              // Add a item to the library
+private:  
+    media * itemFromFile(std::string fileName); // Create a item from a fileName
+    int toFile(media *item);                    // Save a item to a file
+  
 };
 
 #endif

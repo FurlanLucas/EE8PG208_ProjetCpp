@@ -23,7 +23,8 @@ protected:
 // ----------------------------------------------------------------------------
 // Class member functions
 public:
-    adm(std::string name, std::string surName, std::string email);
+    adm(std::string name, std::string surName, std::string email,
+        std::string password_);
     adm(std::string fileName);
     void showClientsInfo(void);
 };

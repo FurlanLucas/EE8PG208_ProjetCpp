@@ -42,7 +42,7 @@ int media::lendItem(void){
   // Function to lend a item to a user. It reduces the available number by one.
   // It returns 0 if it was sucessfully executated and 0 if it was not.
   if (dispNumber > 0){
-    dispNumber++;
+    dispNumber--;
     return 0;
   }
   else{
