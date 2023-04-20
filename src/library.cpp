@@ -2,18 +2,17 @@
 
 
 library::library(void) 
-    : dirName(ITEMS_DIRNAME)
-    , itemsNumber(0) {
     // Class constructor, initialize the attributes with zeros items inside.
-    items = new media*; 
+    : dirName(ITEMS_DIRNAME){    
+    items = *new std::vector<media*> (0);
+    //std::cout << items.size() << std::endl;
 }
 
 
 library::library(std::string folderName) 
-    : dirName(folderName)
-    , itemsNumber(0) {
     // Class constructor, initialize the attributes with zeros items inside.
-    items = new media*; 
+    : dirName(folderName){    
+    //items = *new std::vector<media*> (0);
 }
 
 
@@ -28,26 +27,31 @@ int library::loadItems(void){
     struct dirent *cfile;      // Pointer for the file in *folder (see dirent.h)
     folder = opendir(dirName.c_str()); // Open all files in the directory
 
-    if (!folder) {// If it is possible to opfile the directory
-        std::cout << "Error in 'library::loadItems(void)' function. " << 
-            "It was not possible to open the directory " << dirName <<
-            "." << std::endl;
+    // If it is possible to opfile the directory
+    if (!folder) {
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+            "library::loadItems(void)' function in " << __FILE__ << ".\n" <<
+            "\tIt was not possible to open the directory." << std::endl;
         return 1;
     }
 
     // Count the total number of items to load
-    itemsNumber = 0;   // Items in the object will be overwrited
+    int itemsNumber = 0;
     while ((cfile = readdir(folder)) != NULL){ itemsNumber++; }
     itemsNumber = itemsNumber - 2;  // Will not take the '.' and '..'
 
     // Check the number of number of items
     if (itemsNumber>MAXITEMS){
-        std::cout << "Error in 'library::loadItems(void)' function. " << 
-            "Impossible to load files: number of items " <<
-            "exceed the maximum possible." << std::endl;
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+            "library::loadItems(void)' function in " << __FILE__ << ".\n" <<
+            "\tImpossible to load files: number of items exceed the " <<
+            "maximum possible.\n" << std::endl;
         return 1;
     }
-    items = new media*[itemsNumber];
+
+    // Items in the object will be overwrited
+    //delete &items;
+    items = *new std::vector<media*> (itemsNumber);
 
     // Reset the pointer to the first file and ignore '.' and '..'
     rewinddir(folder); cfile = readdir(folder); cfile = readdir(folder);
@@ -55,17 +59,19 @@ int library::loadItems(void){
     // Open each one of the files and charges the info
     for(int i = 0;(cfile = readdir(folder)) != NULL; i++) {
         std::string fileName = dirName + "/" + (std::string)cfile->d_name;
-          items[i] = itemFromFile(fileName);
+        items[i] = itemFromFile(fileName);
+        //items.insert(items.end(), itemFromFile(fileName));
     }
-    closedir(folder); //close all directory
+    closedir(folder); //close all directory    
     return 0;
-
 }
 
 
 media *library::itemFromFile(std::string fileName){
     // Function that creates a media pointer to a item loaded from 'fileName'.
-    // This function is used at 'loadItems()', not for public use.
+    // This function is used at 'loadItems()', not for public use. If it was 
+    // possible to load the item, returns media pointer. If any problem has
+    // occured, return a null pointer.
 
     // Possible variables to be loaded
     std::ifstream myfile;   // txt file to be open
@@ -154,27 +160,10 @@ media *library::itemFromFile(std::string fileName){
     }
 
     // If it was not possible to open the file
-    std::cout << "Error in 'library::itemFromFile(std::string fileName)'" << 
-        "function. It was not possible to open the " << fileName << " file.\n";
+    std::cout << "\nLine " << __LINE__ << ": Error executing 'media *" << 
+            "library::itemFromFile(std::string fileName)' function in " << 
+            __FILE__ << ".\nIt was not possible to open the file.\n";
     return NULL;
-}
-
-
-int library::addItem(void){
-    // Function to add a item to the library. Creates another vector of items and
-    // replaces the old one.
-
-    try{
-        // create the new element (test)
-        media newElement = *itemFromFile("items/favor.txt");
-        addItem(&newElement);
-        return 0;
-    }
-    catch(int myNumber){
-        std::cout << "Error in 'library::addItem(void)' function. " << 
-            "Could not append the new value." << std::endl;
-        return 1;
-    }
 }
 
 
@@ -184,24 +173,15 @@ int library::addItem(media *itemToAdd){
     // ocurred. This function is to intern use only, for external (user) item
     // append, use the addItem(void).
 
-    itemsNumber++; // Increment the number of items in the library
-    media **newList = new media*[itemsNumber]; // Create a new list of items
-
-    // Copie all the old variables to the new vector
-    for(int i=0; i<itemsNumber-1; i++){
-        newList[i] = items[i];
-    }
-
     // Try to append the new value
     try{
-        items[itemsNumber-1] = itemToAdd; // Add the new item
-        delete[] newList;
+        items.insert(items.end(), itemToAdd);
         return 0;
     }
     catch(int error){
-        std::cout << "Error in 'library::addItem(media *itemToAdd)' function. " << 
-            "Could not append the new value." << std::endl;
-        delete[] newList;
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+            "library::addItem(media *itemToAdd)' function in " << __FILE__ << 
+            ".\n\tCould not append the new value." << std::endl;
         return 1;
     }
 }
@@ -211,9 +191,10 @@ void library::showItems(void){
     // Function to display main item information for all items in the library,
     // (any user may call).
 
-    if(itemsNumber==0){
-        std::cout << "Error in 'library::showitems(void)' function. " << 
-            "It is not possible to show items within a empty library.\n";
+    if(items.size()==0){
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'void " << 
+            "library::showitems(void)' function in " << __FILE__ << 
+            ".\n\tIt is not possible to show items within a empty library.\n";
         return;
     }
 
@@ -223,7 +204,7 @@ void library::showItems(void){
     
 
     // Item display
-    for(int i=0; i<itemsNumber;i++){
+    for(int i=0; i<items.size();i++){
         std::string title = items[i]->getTitle() +
         "                                                              " ;
         std::string author = items[i]->getAuthor() +
@@ -239,20 +220,21 @@ void library::showItems(void){
 
 
 library *library::search(std::string nameToSearch){
-    // Function to search an item. Recives a string 'name' to search for and
-    // returns a library pointer to an new object made of the results. That makes
-    // a new research possible within the previous results. If no result is found,
-    // it return a library with 0 elements in side, then it is necessary to check
-    // the result.
+    // Function to search an item. Recives a string 'nameToSearch' to search for 
+    // and returns a library pointer to an new object made of the results. That
+    // makes a new research possible within the previous results. If no result is,
+    // found it return a library with 0 elements in side, then it is necessary to 
+    // check the result.
 
     // Creat a library for the results
     library *results = new library;
 
     // Search in currant library the matches
-    for(int i=0; i<itemsNumber; i++){
+    for(int i=0; i<items.size(); i++){
         // if it is fund, add the item to results
-        if(items[i]->searchFor(nameToSearch))
-          results->addItem(items[i]);
+        if(items[i]->searchFor(nameToSearch)){
+            results->addItem(items[i]);
+        }
     }
 
     return results; // Return results
@@ -261,7 +243,7 @@ library *library::search(std::string nameToSearch){
 
 int library::getItemsNumber(void){
     // Function to get the currant itemsNumber variable.
-    return itemsNumber;
+    return items.size();
 }
 
 
@@ -269,7 +251,7 @@ int library::save(void){
     // Function to save each item in the library to a separate txt file. The function
     // will return 0 if it was sucessfully executed and 1 if it was not.
 
-    for (int i=0; i<itemsNumber; i++){
+    for (int i=0; i<items.size(); i++){
         // Check if a file has not been saved correctly
         if(toFile(items[i])){
             std::cout << "Error in 'library::save(void)' function. " <<
@@ -312,57 +294,6 @@ int library::toFile(media *item){
 }
 
 
-int library::removeItem(int itemToRemove){
-    // This function creates a new items list of medias without a especific
-    // item given by its positin in the corrent library, i.e. "itemToRemove". 
-    // Returns 0 if the function was executed sucessfully or 1 if it was not.
-
-    // Check it the item existes
-    if (itemToRemove>itemsNumber-1){
-        std::cout << "Error in 'library::removeItem(int itemToRemove)'" << 
-            " function. There is no item n. " << itemToRemove << 
-            " in the library." << std::endl;
-        return 1;
-    }
-
-    // Creates the new vector
-    itemsNumber--;
-    media **newList = new media*[itemsNumber]; // Create a new list of items
-
-    // Removes the file from the current directory
-    std::string fileName = dirName + "/" + 
-        std::to_string(items[itemToRemove]->getReference()) + "_" +  
-        items[itemToRemove]->getTitle().substr(0, CAR_TITLE_TXT) +  "_" + 
-        items[itemToRemove]->getAuthor().substr(0, CAR_AUTHOR_TXT) + ".txt";
-    if(remove(fileName.c_str()) != 0){
-        std::cout << "Error in 'library::removeItem(int itemToRemove)'" << 
-            " function. It was not possible to remove the file." << std::endl;
-        return 1;
-    }
-
-    // Copy all items to the new array
-    try{
-        int j=0;
-        for(int i=0; i<itemsNumber+1; i++){
-            if(i==itemToRemove)
-                continue;
-            newList[j] = items[i];
-            j++;
-        }
-        items = newList;
-        delete[] newList;
-    }
-    catch(int error){
-        std::cout << "Error in 'library::removeItem(int itemToRemove)'" << 
-            " function. It was not possible to copy the library." << std::endl;
-        return 1;
-    }
-
-    // Ending
-    return 0;
-}
-
-
 int library::lendItem(int itemToLend){
     if(!items[itemToLend]->lendItem())
         return 0;
@@ -389,7 +320,7 @@ library *library::partition(int *refInputs){
     int maxItems = refInputs[0];
 
     // Search in the library
-    for(int i=0; i<itemsNumber; i++){
+    for(int i=0; i<items.size(); i++){
         // Search of the item
         for(int j=1; j<=maxItems; j++){
             // Test if the item is required

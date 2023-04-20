@@ -21,9 +21,9 @@
 // Constant definitions --------------------------------------------------------
 #define USERS_DIRNAME "userData"   // Folder name to be loaded (users' data)
 #define ERROR_COLOR 4              // Color displayed in error messages
-#define LOGIN_COLOR 2             // Display color for login (windons.h)
+#define LOGIN_COLOR 2              // Display color for login (windons.h)
 #define LOGOUT_COLOR 4             // Display color for logout (windons.h)
-
+#define CHAR_IGNORE 10000           // Characters to ignore after a cin read.
 
 class app {
 
@@ -34,9 +34,11 @@ private:
     library *loadedLibrary;  // Loaded library with all items
     library *userItems;      // User landed items (loaded from file)
     user *cUser;             // Current user logged
+    client **allClients;     // Save all clients in the library
     bool isLogged; // Boolean variable to control if there is a user logged
-    bool isAdm;    // Boolean to check if it is a adm logged;7
+    bool isAdm;              // Boolean to check if it is a adm logged;
     HANDLE  hConsole;        // To handle the display
+    bool toBreak;            // Boolean variable to break the menu option
 
 // ----------------------------------------------------------------------------
 // Class member functions

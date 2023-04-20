@@ -1,17 +1,21 @@
 #include "app.h"
 
 
-app::app(void){
+app::app(void):
+    toBreak(false){
     // First displays
     std::cout << "\nInitializing application." << std::endl;
     loadedLibrary = new library;
     cLibrary = new library;
 
     // Tries to initialize
-    if(loadedLibrary->loadItems())
-        std::cout << "Error loading files." << std::endl;
+    if(loadedLibrary->loadItems()){
+        std::cout << "Error loading files. Exiting." << std::endl;
+        exit(1);
+    }
     else
-        std::cout << "All items were loaded sucessfully." << std::endl;
+        std::cout << "All " << loadedLibrary->getItemsNumber() << 
+            " items were loaded sucessfully." << std::endl;
 
     isLogged = false;
     isAdm = false;
@@ -19,6 +23,7 @@ app::app(void){
     // Setting console collor attribute
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, 15);
+
 }
 
 
@@ -39,7 +44,6 @@ int app::menu(void){
     // the other functions that will be called. Returns 0 if the application
     // were executed sucessfully ou 1 if it was not.
 
-    int toBreak = 0;
     while(!toBreak){
         // Menu printing
         displayMenuOptions();
@@ -47,11 +51,10 @@ int app::menu(void){
         // Take the option and check if it is a valid integer number
         int option;
         std::cin >> option;
+        std::cin.clear();
+        std::cin.ignore(CHAR_IGNORE, '\n');
         if(std::cin.fail()){
-            std::cin.clear();
-            std::cin.ignore(1000, '\n');
             displayInvalidChoice();
-            continue;
         }
 
         // Main option
@@ -73,7 +76,6 @@ int app::menu(void){
             break;
 
         case 5: // [5] Return to general library
-            delete cLibrary;
             cLibrary = new library;
             break;
 
@@ -126,30 +128,34 @@ int app::search(void){
 
     // Take the string to search for
     std::string toSearch;
-    std::cin >> toSearch;
+    std::getline(std::cin, toSearch);    
+    std::cin.clear();
+
+    // Verify in which library it has to search for  
+    library* &target = cLibrary->getItemsNumber() ? cLibrary : loadedLibrary;
 
     // Search for the item and show the results
-    try{   
-        // Verify in which library it has to search for     
-        if(cLibrary->getItemsNumber()!=0)
-            results = cLibrary->search(toSearch);
-        else
-            results = loadedLibrary->search(toSearch);
+    try{  
+        
+        results = target->search(toSearch);
 
         // Verify if there was any result
-        if(results->getItemsNumber()!=0){
+        if(results->getItemsNumber()){
             std::cout << "\nShowing " << results->getItemsNumber() << 
                 " results." << std::endl;
-            results->showItems();
             cLibrary = results;
+            cLibrary->showItems();
         }
         else{
             std::cout << "No items were found." << std::endl;
         }
     }
     catch(int errorN){
-        std::cout << "Un error ocurred at the search function." << std::endl;
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+            "app::search(void)' function in " << __FILE__ << ".\n\tIt is not"
+            " possible to show items within a empty library.\n";
         delete results;
+        toBreak = true;
         return 1;
     }
 
@@ -207,7 +213,8 @@ int app::login(void){
     folder = opendir(USERS_DIRNAME); // Open all files in the directory
     
     if (!folder){
-        std::cout << "I was not possible open the folder." << std::endl;
+        std::cout << "I was not possible open the folder." << std::endl;        
+        toBreak = true;
         return 1;
     }
 
@@ -221,7 +228,6 @@ int app::login(void){
 
     // Search for the information within the users data
     for (int i=0;i<usersNumber;i++) {
-        std::ifstream myfile;   // txt file to be open
         cfile = readdir(folder);
 
         // Checks if it is a client or a adm
@@ -244,7 +250,7 @@ int app::login(void){
         // Check if it is the correct ID;
         if(cUser->checkID(email, password)){
             std::cout << "Welcome back " << cUser->getSurName(); 
-            std::cout << "!. You are now ";
+            std::cout << "! You are now ";
             SetConsoleTextAttribute(hConsole, LOGIN_COLOR);
             std::cout << "logged in";    
             SetConsoleTextAttribute(hConsole, 15);
@@ -384,6 +390,43 @@ void app::loadClientsItems(void){
 
 void app::showClients(void){
     // Function to show all clients in the library
+
+    DIR *folder;               // Folter variable to be loaded (see dirent.h)
+    struct dirent *cfile;      // Pointer for the file in *folder (see dirent.h)
+    folder = opendir(USERS_DIRNAME); // Open all files in the directory
+
+    // Load all clients info
+    int usersNumber = 0;
+    while ((cfile = readdir(folder)) != NULL){ usersNumber++; }
+    usersNumber = usersNumber - 2;  // Will not take the '.' and '..'
+
+    // Resets the pointer
+    rewinddir(folder); cfile = readdir(folder); cfile = readdir(folder);
+
+    std::cout << "\tName \t Surname" << std::endl;
+
+    // Search for the information within the users data
+    int j = 0;
+    for (int i=0;i<usersNumber;i++) {
+        cfile = readdir(folder);        
+
+        // Checks if it is a client or a adm
+        std::string fileName = (std::string) USERS_DIRNAME + "/" + 
+            (std::string)cfile->d_name;        
+    
+        if(fileName.find("client")!=std::string::npos){
+            allClients[j] = new client(fileName);         
+            std::cout << "[" << j << "]" << allClients[j]->getSurName() << '\t' << 
+                allClients[j]->getName() << '\t' << std::endl;    
+            j++;                  
+        }        
+    }
+
+    closedir(folder);
+
+    std::cout << "[1] Delete client" << std::endl;
+    std::cout << "[2] Change client info" << std::endl;
+
 }
 
 

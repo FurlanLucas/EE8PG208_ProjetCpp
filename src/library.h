@@ -13,6 +13,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <fstream>
+#include <vector>
 #include <typeinfo>
 #include "media/DVD.h"
 #include "media/book.h"
@@ -33,17 +34,14 @@ class library {
 
 // Class member variables
 private:
-    int itemsNumber; // Number of items in the library
-    media **items;   // Pointer to a media obeject that point to the first item
     std::string dirName; // Name of the folder that contains the items
-
-
+    std::vector<media*> items; // Vector of media pointers
+    
 // ----------------------------------------------------------------------------
 // Class member functions
 public:
     library(void);                    // Constructor
     library(std::string folderName);  // Constructor if another folder name
-    int addItem(void);                // Function to add item from a user input
     int getItemsNumber(void);         // Get the current items number
     int lendItem(int itemToLend);     // Function that lends an item
     int loadItems(void);              // Load items from a file
