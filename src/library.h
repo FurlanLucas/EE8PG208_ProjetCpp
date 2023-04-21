@@ -51,7 +51,7 @@ public:
     void showItems(void);             // Show all items in the library
     void showItemDes(int itemToShow); // Function that returns an specific item
     int removeItem(int itemToRemove); // Function that removes an item 
-    int addItem(media *itemToAdd);    // Add a item to the library
+    int addItem(media *itemToAdd, bool toSave=false);  // Add a new item
 
 private:  
     media * itemFromFile(std::string fileName); // Create a item from a fileName

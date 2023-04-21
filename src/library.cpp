@@ -50,7 +50,6 @@ int library::loadItems(void){
     }
 
     // Items in the object will be overwrited
-    //delete &items;
     items = *new std::vector<media*> (itemsNumber);
 
     // Reset the pointer to the first file and ignore '.' and '..'
@@ -60,7 +59,6 @@ int library::loadItems(void){
     for(int i = 0;(cfile = readdir(folder)) != NULL; i++) {
         std::string fileName = dirName + "/" + (std::string)cfile->d_name;
         items[i] = itemFromFile(fileName);
-        //items.insert(items.end(), itemFromFile(fileName));
     }
     closedir(folder); //close all directory    
     return 0;
@@ -91,9 +89,9 @@ media *library::itemFromFile(std::string fileName){
     std::string production; // Productors' name
     int timeDuration;       // Time duration (min)
     int trackNumber;        // Number of tracks in DVD/CD
-    std::string format;     // Format of the digital ressource;
-    std::string link;       // Link for the digital ressource;
-    int size;               // Size of the online ressource;
+    std::string format;     // Format of the digital ressource
+    std::string link;       // Link for the digital ressource
+    int size;               // Size of the online ressource
 
     // Open the file
     myfile.open(fileName);
@@ -117,7 +115,7 @@ media *library::itemFromFile(std::string fileName){
             getline(myfile, editor);
             getline(myfile, summary);
             return new book(reference,author,title,addDate,year,totalNumber,
-            dispNumber,pagesNumber,collection,editor,summary);
+            dispNumber,pagesNumber,collection,summary,editor);
   
         case('m'): // If it is a magazine
             myfile >> pagesNumber;
@@ -167,15 +165,25 @@ media *library::itemFromFile(std::string fileName){
 }
 
 
-int library::addItem(media *itemToAdd){
+int library::addItem(media *itemToAdd, bool toSave){
     // Function to add an item to the library. Recives a 'media' pointer to be
     // added and returns 0 if the item was sucessfully added or 1 if any problem
     // ocurred. This function is to intern use only, for external (user) item
-    // append, use the addItem(void).
+    // append, use the addItem(void). The boolean variable toFIle controls
+    // whenever the media item to be added will be saved in the respective
+    // directory.
 
     // Try to append the new value
     try{
         items.insert(items.end(), itemToAdd);
+        if(toSave){
+            if(!toFile(itemToAdd)){
+                std::cout << "\nLine " << __LINE__ << ": Error executi" << 
+                "ng 'int library::addItem(media *itemToAdd)' function in " << 
+                 __FILE__ << ".\n\tCould not append the new value.\n";
+                return 1;
+            }
+        }
         return 0;
     }
     catch(int error){
@@ -281,8 +289,9 @@ int library::toFile(media *item){
 
     // Check if the file has been opened
     if(!outFile){
-        std::cout << "Error in 'library::toFile(media *item)' function. "
-            "File " << fileName << " could not be opened." << std::endl;
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+            "library::toFile(media *item)' function in " << __FILE__ << 
+            ".\nFile " << fileName << " could not be opened." << std::endl;
         return 1;
     }
 

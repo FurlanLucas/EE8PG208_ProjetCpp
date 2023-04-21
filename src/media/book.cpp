@@ -6,8 +6,8 @@ book::book(int reference_, std::string author_, std::string title_,
   : media{reference_,author_,title_,addDate_,year_,totalNumber_,dispNumber_}
   , pagesNumber(pagesNumber_)
   , collection(collection_)
-  , editor(editor_)
-  , summary(summary_){
+  , summary(summary_)
+  , editor(editor_){
 
 }
 
