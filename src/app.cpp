@@ -62,6 +62,7 @@ int app::menu(void){
             break;
 
         case 2: // [2] Show all items
+            system("CLS");
             loadedLibrary->showItems();
             break;
 
@@ -200,6 +201,7 @@ int app::search(void){
             std::cout << "\nShowing " << results->getItemsNumber() << 
                 " results." << std::endl;
             cLibrary = results;
+            system("CLS");
             cLibrary->showItems();
         }
         else{
@@ -254,14 +256,12 @@ int app::login(void){
     // ocurred sucessfully or 1 if it did not.
 
     // Take the user's email
-    std::string email;
-    std::cout << "Enter with your e-mail: ";
-    std::cin >> email;
+    std::string email = takeSingleInfo("email");
+    if(email == "0") return 0; // Check if the user wants to quit
 
     // Take the user's password
-    std::string password;
-    std::cout << "Enter with your password: ";
-    std::cin >> password;
+    std::string password = takeSecretPassword("password");
+    std::cout << std::endl;
 
     // Search for the information within the users data
     for (int i=0;i<allUsers.size();i++) {
@@ -505,7 +505,9 @@ int app::newClientUser(void){
     std::string name;
     std::string surname;
     std::string email;
-    std::string password;
+    std::string password = "";
+    std::string secondPassword;
+    char a; // Char for hiden password input
 
     // Get name and surname from user
     name = takeSingleInfo("name (without surname)");
@@ -534,11 +536,37 @@ int app::newClientUser(void){
     // Get the password
     emailPasswordCheckBreak = false;
     while(!emailPasswordCheckBreak){
-        password = takeSingleInfo("password");
-        if(password == "0") return 0; // Check if the user wants to quit
+        // Take the password
+        password = takeSecretPassword("password");
+        std::cout << std::endl;
 
         // Check if the password is strong enough
-        // code to be added
+        bool passwordSize = password.size() <= MINIMUM_CHAR_PASSWORD;
+        bool notNum = password.find_first_of("0123456789")==std::string::npos;
+        bool notSim = password.find_first_of(SYMBOLS_PASSWORD)==std::string::npos;
+        bool notUper = true;
+        bool notLower = true;
+        for(char element : password){
+            if(isupper(element)) notUper = false;
+            if(islower(element)) notLower = false;
+        }
+        
+        if(notNum || notSim || notUper || notLower || passwordSize){
+            std::cout << "The password must have a number, a symbol ( " <<
+                SYMBOLS_PASSWORD << " ), at least " << MINIMUM_CHAR_PASSWORD << 
+                " characters, with one upper and lower case." << std::endl;
+            continue;
+        }
+        
+        // Gets the same password a second time (confirmation)
+        secondPassword = takeSecretPassword("password again (confirmation)");
+        std::cout << std::endl;
+        if(secondPassword != password){
+            std::cout << "The passwords must be identical." << std::endl;
+            continue;
+        }
+
+        std::cout << std::endl;
         emailPasswordCheckBreak = true;
     }
 
@@ -783,6 +811,8 @@ std::string app::takeSingleInfo(std::string informationName, bool isInt){
     // }
     //
     // All other checks for string compatibility must be done outside the function.
+    // The input informationName will be used to display only (will not affect)
+    // the function itself.
 
     // Variable declaration
     std::string information;
@@ -797,7 +827,7 @@ std::string app::takeSingleInfo(std::string informationName, bool isInt){
         std::cin.clear();
 
         // Check if the input have to be an integer
-        if(isInt && information.find_first_not_of("0123456789")!=std::string::npos){
+        if(isInt&&information.find_first_not_of("0123456789")!=std::string::npos){
             SetConsoleTextAttribute(hConsole, ERROR_COLOR);
             std::cout << "Erro";            
             SetConsoleTextAttribute(hConsole, 15);
@@ -847,6 +877,40 @@ std::string app::takeSingleInfo(std::string informationName, bool isInt){
             "me, bool isInt)' function in " << __FILE__ << ".\nIt " <<
             "was not possible to open the file." << std::endl;
     return NULL;
+}
+
+
+std::string app::takeSecretPassword(std::string informationName){
+    // Function to takea secret password from the user. Used in user creation
+    // and in login. It work identically as takeSingleInfo, but it does not have
+    // to be an integer and also has a hiden input (HIDEN_CHAR). The input 
+    // informationName will alse be used to display only (will not affect) the
+    // function itself.
+
+    // Variables
+    std::string password = "";
+    char a;
+
+    // Display command
+    std::cout << "Enter the " << informationName << ": ";
+    
+    // Infinite loop
+    for(int i=0;;){
+        a = getch();
+        if(a!='\b' && a!='\0' && a!='\r'){
+            password.push_back(a); //stores a in pass
+            std::cout << HIDEN_CHAR;
+        }
+        // If backspace has been pressed (exclude the last character)
+        if(a == '\b' && !password.empty()){
+            std::cout << "\b \b"; // Rub the character behind the cursor.
+            password.erase(std::prev(password.end()));
+        }
+        if(a == '\r')
+            break; // Break the loop
+    }
+
+    return password;
 }
 
 

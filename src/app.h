@@ -9,6 +9,8 @@
 
 // Includes --------------------------------------------------------------------
 #include <string>
+#include <conio.h>
+#include <stdlib.h>
 #include <iostream>
 #include <vector>
 #include <dirent.h>
@@ -33,6 +35,9 @@
 #define CONFIRMATION_COLOR 3       // Color for confirmation (attention) text
 #define LOGOUT_COLOR 5             // Display color for logout (windons.h)
 #define CHAR_IGNORE 10000          // Characters to ignore after a cin read.
+#define SYMBOLS_PASSWORD "~`!@#$%^&*()_-+={[}]|:;'<,>.?/" // Symbols permited
+#define MINIMUM_CHAR_PASSWORD 10   // Minimum number of characters in a password
+#define HIDEN_CHAR '*'             // Character to be displayed in hiden password
 
 class app {
 
@@ -73,8 +78,10 @@ private:
     int loadUsers(void);             // Function to load all user data
     int createItem(void);            // Function to create an item from user data
     int takeIntChoice(void);         // Function to receive the option from user
-    std::string takeSingleInfo(std::string informationNamem, bool isInt = false);
+    std::string takeSingleInfo(std::string informationName, bool isInt = false);
+    std::string takeSecretPassword(std::string informationName); // See doc.
     void forgotPassword(void);       // Function to reset a user password
+
 };
 
 #endif
