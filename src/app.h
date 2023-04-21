@@ -26,7 +26,7 @@
 #include "../lib/user/adm.h"
 
 // Constant definitions --------------------------------------------------------
-#define USERS_DIRNAME "userData"   // Folder name to be loaded (users' data)
+#define USERS_DIRNAME "../userData"   // Folder name to be loaded (users' data)
 #define MAX_USERS 1000             // Max number of users to be loaded
 #define ERROR_COLOR 4              // Color displayed in error messages
 #define LOGIN_COLOR 2              // Display color for login (windons.h)
@@ -74,6 +74,7 @@ private:
     int createItem(void);            // Function to create an item from user data
     int takeIntChoice(void);         // Function to receive the option from user
     std::string takeSingleInfo(std::string informationNamem, bool isInt = false);
+    void forgotPassword(void);       // Function to reset a user password
 };
 
 #endif

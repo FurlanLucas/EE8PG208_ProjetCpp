@@ -1,18 +1,10 @@
 #include "library.h"
 
 
-library::library(void) 
-    // Class constructor, initialize the attributes with zeros items inside.
-    : dirName(ITEMS_DIRNAME){    
-    items = *new std::vector<media*> (0);
-    //std::cout << items.size() << std::endl;
-}
-
-
 library::library(std::string folderName) 
     // Class constructor, initialize the attributes with zeros items inside.
     : dirName(folderName){    
-    //items = *new std::vector<media*> (0);
+    items = *new std::vector<media*> (0);
 }
 
 

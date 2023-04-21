@@ -23,7 +23,7 @@
 #include "../lib/media/VHS.h"
 
 // Constant definitions --------------------------------------------------------
-#define ITEMS_DIRNAME "items"   // Folder name to be loaded
+#define ITEMS_DIRNAME "../items"   // Folder name to be loaded
 #define MAXITEMS 2000           // Max number of items in the library
 #define CAR_TITLE 50            // Number of characters to display the item's name
 #define CAR_AUTHOR 30           // Number of characters to display the item's author
@@ -40,8 +40,7 @@ private:
 // ----------------------------------------------------------------------------
 // Class member functions
 public:
-    library(void);                    // Constructor
-    library(std::string folderName);  // Constructor if another folder name
+    library(std::string folderName=ITEMS_DIRNAME); // Constructor with folder name
     int getItemsNumber(void);         // Get the current items number
     int lendItem(int itemToLend);     // Function that lends an item
     int loadItems(void);              // Load items from a file

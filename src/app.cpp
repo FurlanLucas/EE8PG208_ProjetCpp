@@ -9,7 +9,7 @@ app::app(void)
     // First displays
     std::cout << "\nInitializing application." << std::endl;
     loadedLibrary = new library;
-    cLibrary = new library;
+    cLibrary = new library("NULL");
 
     // Tries to initialize
     if(loadedLibrary->loadItems()){
@@ -95,6 +95,15 @@ int app::menu(void){
                 displayInvalidChoice();
             break;
 
+        case 8: // [8] Forgot my password / return an item
+            if(!isLogged)
+                forgotPassword();
+            else if(isAdm)
+                takeItem();
+            else
+                displayInvalidChoice();
+            break;
+
         case 9:
             createItem();
             break;
@@ -147,6 +156,7 @@ void app::displayMenuOptions(void){
     else{
         std::cout << " [6] Login" << std::endl;
         std::cout << " [7] Create an account" << std::endl;
+        std::cout << " [8] Forgot my password" << std::endl;
     }
          
     // Final options
@@ -267,8 +277,16 @@ int app::login(void){
             std::cout << "." << std::endl;
             isLogged = true; 
 
-            // Check if it is an adm
+
             std::string type = typeid(*(allUsers[i])).name();
+
+            // Check if it is an adm            
+            if (type.find("client")!=std::string::npos){
+                int *refList = cUser->getAttributes();
+                userItems = loadedLibrary->partition(refList);
+            }
+
+            // Check if it is an adm            
             if (type.find("adm")!=std::string::npos)
                 isAdm = true;
 
@@ -347,20 +365,16 @@ void app::showMyItems(void){
     // all client items based in the reflist (array of int) defined
     // in client class.
 
-    loadClientsItems();
+    // Check if the user has items
+    if(userItems->getItemsNumber() == 0){
+        std::cout << "You currently do not have items. Go to 'lend item' in" << 
+            " the main menu to lend an item." << std::endl;
+        return;
+    }
+
+    // If there are items in the library
     std::cout << "You have currently those items: \n" << std::endl;
     userItems->showItems();
-}
-
-
-void app::loadClientsItems(void){
-    // Function to load the client's items. It takes the list of items
-    // presented in the clients source file (ref code) and creates a
-    // partition in the loaded library. See 'partition' in 'lybrary.cpp'
-    // for more info
-    
-    int *refList = cUser->getAttributes();
-    userItems = loadedLibrary->partition(refList);
 }
 
 
@@ -481,28 +495,84 @@ int app::newUser(void){
 
 int app::newClientUser(void){
     // Function to creates a new client user. Takes all information that is needed
-    // in the std::cin.
+    // in the std::cin from user. All information is confirmed in takeSingleInfo,
+    // but a check of return == "0" is done each time (see takeSingleInfo for more
+    // information). Besides, an email existence and password security nivel check is
+    // done.
 
+    // Variable declaration
+    bool emailPasswordCheckBreak = false;
     std::string name;
     std::string surname;
     std::string email;
     std::string password;
 
-    std::cout << "Enter your name (without surname): ";
-    std::cin >> name;
-    std::cout << "Enter your surname: ";
-    std::cin >> surname;    
-    std::cout << "Enter your email: ";
-    std::cin >> email;
+    // Get name and surname from user
+    name = takeSingleInfo("name (without surname)");
+    if(name == "0") return 0; // Check if the user wants to quit
+    surname = takeSingleInfo("surname");
+    if(surname == "0") return 0; // Check if the user wants to quit
 
+    // Get the email
+    while(!emailPasswordCheckBreak){
+        email = takeSingleInfo("email");
+        if(email == "0") return 0; // Check if the user wants to quit
+
+        // Check if the email is already registred
+        for(int i=0; i<allUsers.size(); i++){
+            if(allUsers[i]->getEmail() == email){
+                std::cout << "This email is already registred. If you forgot"
+                    << " your password, go to 'forgot my password' option.\n";
+                break;
+            }
+            // If the email is avaiable
+            if(i+1==allUsers.size())
+                emailPasswordCheckBreak = true;
+        }
+    }
+
+    // Get the password
+    emailPasswordCheckBreak = false;
+    while(!emailPasswordCheckBreak){
+        password = takeSingleInfo("password");
+        if(password == "0") return 0; // Check if the user wants to quit
+
+        // Check if the password is strong enough
+        // code to be added
+        emailPasswordCheckBreak = true;
+    }
+
+    // Try to create the user (automatic login)
     try{
         cUser = new client(name, surname, email, password);
+        userItems = new library("NULL");
+        isLogged = true;
     }
     catch(int error){
-        std::cout << "Error in 'app::newCLientUser(void)' function. " <<
-            "Impossible to creat a new client class." << std::endl;
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+            "app::newClientUser(void)' function in " << __FILE__ << ".\n" <<
+            "\tIt was not possible to create the new user." << std::endl;
         return 1;
     }
+
+    // Try to save the user in dataBase
+    try{
+        // Code to be added
+    }
+    catch(int error){
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+            "app::newClientUser(void)' function in " << __FILE__ << ".\n" <<
+            "\tIt was not possible to save the user." << std::endl;
+        return 1;
+    }
+
+    // Ending
+    std::cout << "User created successfully. Welcome " << cUser->getSurName(); 
+    std::cout << "! You are now ";
+    SetConsoleTextAttribute(hConsole, LOGIN_COLOR);
+    std::cout << "logged in";    
+    SetConsoleTextAttribute(hConsole, 15);
+    std::cout << "." << std::endl;
     return 0;
 }
 
@@ -702,7 +772,17 @@ std::string app::takeSingleInfo(std::string informationName, bool isInt){
     // return the information in a std::string type. The boolean variabel
     // isInt controls if its mandatory for the input to be an integer type.
     // It is true and the input is no numeric, will ask for another input from
-    // the user.
+    // the user. If it returns the special string "0", then the user wants to
+    // return to the main menu (or exit the application). So, for each call
+    // function, a return check mus be done, with the format
+    // 
+    // if(takeSingleInfo(informationName) == "0"){
+    //      /*
+    //          return statement (returns to main menu)
+    //      */
+    // }
+    //
+    // All other checks for string compatibility must be done outside the function.
 
     // Variable declaration
     std::string information;
@@ -786,4 +866,33 @@ int app::takeIntChoice(void){
     }
 
     return tapedOption;
+}
+
+
+void app::forgotPassword(void){
+    // Function to reset a user password. To be implemented.
+
+    // Variable declaration
+    bool emailCheckBreak = false;
+    std::string email;
+
+    // Get the email
+    while(!emailCheckBreak){
+        email = takeSingleInfo("email");
+        if(email == "0") return; // Check if the user wants to quit
+
+        // Check if the email is already registred
+        for(int i=0; i<allUsers.size(); i++){
+            if(allUsers[i]->getEmail() == email){
+                std::cout << "An email has been sent to " << email << ". "
+                    << "Check your inbox for instructions." << std::endl;
+                return;
+            }
+            // If the email is avaiable
+            if(i+1==allUsers.size()){
+                std::cout << "No account was finded with " << email << ".\n";
+                return;
+            }
+        }
+    }
 }
