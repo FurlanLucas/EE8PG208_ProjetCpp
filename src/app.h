@@ -14,16 +14,16 @@
 #include <dirent.h>
 #include <windows.h> 
 #include "library.h"
-#include "media/DVD.h"
-#include "media/book.h"
-#include "media/CD.h"
-#include "media/digital.h"
-#include "media/magazine.h"
-#include "media/VHS.h"
-#include "media/media.h"
-#include "user/user.h"
-#include "user/client.h"
-#include "user/adm.h"
+#include "../lib/media/DVD.h"
+#include "../lib/media/book.h"
+#include "../lib/media/CD.h"
+#include "../lib/media/digital.h"
+#include "../lib/media/magazine.h"
+#include "../lib/media/VHS.h"
+#include "../lib/media/media.h"
+#include "../lib/user/user.h"
+#include "../lib/user/client.h"
+#include "../lib/user/adm.h"
 
 // Constant definitions --------------------------------------------------------
 #define USERS_DIRNAME "userData"   // Folder name to be loaded (users' data)

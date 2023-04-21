@@ -21,7 +21,6 @@
 #include <iostream>
 #include <fstream>
 #include "user.h"
-#include "../library.h"
 
 class client : public user {
 

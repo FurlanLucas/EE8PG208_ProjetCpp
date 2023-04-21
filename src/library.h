@@ -15,12 +15,12 @@
 #include <fstream>
 #include <vector>
 #include <typeinfo>
-#include "media/DVD.h"
-#include "media/book.h"
-#include "media/CD.h"
-#include "media/digital.h"
-#include "media/magazine.h"
-#include "media/VHS.h"
+#include "../lib/media/DVD.h"
+#include "../lib/media/book.h"
+#include "../lib/media/CD.h"
+#include "../lib/media/digital.h"
+#include "../lib/media/magazine.h"
+#include "../lib/media/VHS.h"
 
 // Constant definitions --------------------------------------------------------
 #define ITEMS_DIRNAME "items"   // Folder name to be loaded
