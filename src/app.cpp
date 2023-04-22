@@ -92,7 +92,7 @@ int app::menu(void){
 
         case 7: // [7] Display clients info / Show my items / creates an accout
             if(isLogged && isAdm)
-                showClients();
+                showUsers();
             else if(isLogged && !isAdm)
                 showMyItems(); 
             else if(!isLogged)
@@ -124,6 +124,12 @@ int app::menu(void){
                 displayInvalidChoice();
             break;
 
+        case 11: // [11] Remove client (adm use only)
+            if(isLogged && isAdm)
+                removeClient();
+            else
+                displayInvalidChoice();
+            break;
 
         case 12: // [12] Exit 
             toBreak = true;
@@ -390,7 +396,7 @@ void app::showMyItems(void){
 }
 
 
-void app::showClients(void){
+void app::showUsers(void){
     // Function to show all clients in the library
 
     std::cout << "\tName \t Surname \t Code" << std::endl;
@@ -398,51 +404,15 @@ void app::showClients(void){
     int j = 0;
     for (int i=0;i<allUsers.size();i++) {  
         // Take the type of user    
-        std::string type = typeid(*(allUsers[i])).name();
-
-        // Check wether it ios client
-        if(type.find("client")!=std::string::npos){                   
-            std::cout << "[" << ++j << "]\t" << allUsers[i]->getSurName() <<  
-                '\t' << allUsers[i]->getName() << '\t' << std::endl;                   
-        }        
+        std::cout << "[" << ++j << "]\t" << allUsers[i]->getSurName() <<  
+            '\t' << allUsers[i]->getName() << '\t' << std::endl;                      
     }
-
-
-    // Menu option
-    int localBreak = false;
-    while(!localBreak){
-        // Display options
-        std::cout << "\n\n";
-        std::cout << "List of commands:" << std::endl;
-        std::cout << " [1] Delete client" << std::endl;
-        std::cout << " [2] Change client info" << std::endl;
-        std::cout << " [3] Return to main menu" << std::endl;
-        std::cout << "[12] Exit" << std::endl;
-        std::cout << "\nEnter your option: ";
-        
-        // Take user choice
-        int localOption = takeIntChoice();
-
-        switch(localOption){
-        case 1:
-            return;
-        case 2:
-            return;
-        case 3:
-            return; 
-        case 12:
-            toBreak = true;
-            return;          
-        default:            
-            displayInvalidChoice();
-            break;
-        }
-    }
+    std::cout << std::endl;
 }
 
 
 void app::displayInvalidChoice(void){
-    // Function to display the massega of invalid choice type. Changes
+    // Function to display the massage of invalid choice type. Changes
     // temporally the display color. It doesent return anything.
 
     SetConsoleTextAttribute(hConsole, ERROR_COLOR);
@@ -583,8 +553,11 @@ int app::newClientUser(void){
     }
 
     // Try to create the user (automatic login)
-    try{
-        cUser = new client(name, surname, email, password);
+    try{        
+        allUsers.push_back(new client(name, surname, email, password,
+            allUsers.size()+1));
+        cUser = allUsers[allUsers.size()-1];
+        cUser->save(USERS_DIRNAME);
         userItems = new library("NULL");
         isLogged = true;
     }
@@ -1038,7 +1011,73 @@ void app::removeItem(void){
         loadedLibrary->removeItem(pos);
     }
 
-    // Remove item
+    // Ending
     std::cout << "Item removed successfully." << std::endl;
+    return;
+}
+
+
+void app::removeClient(void){
+    // Function to remove a client (adm use only).
+
+    showUsers();
+
+    //Variable declaration
+    bool localBreak = false;
+    int userNumber;
+
+    // Local loop for local menu
+    while(!localBreak){
+        std::cout << "Enter the client number to be removed: ";
+        userNumber = takeIntChoice();
+
+        if(userNumber>allUsers.size()){
+            std::cout << "There is no such client in the library.\n";
+            continue;
+        }
+
+        localBreak = true;
+    }
+
+    // Confirmation
+    std::cout << "Client discription:\n" << std::endl;
+    std::cout << allUsers[--userNumber]->getName() << std::endl;
+    std::cout << "\nAre you sure that you want to remove the client " <<
+        "permanently?" << std::endl;
+    std::cout << " [1] Yes" << std::endl;
+    std::cout << " [2] No, return to main menu" << std::endl;    
+    std::cout << "[12] No, exit application" << std::endl;
+    
+    // Local loop for local menu
+    localBreak = false;
+    while(!localBreak){
+        std::cout << "\nEnter your option: ";
+        int localOption = takeIntChoice();
+        switch(localOption)    {
+        case 1:
+            localBreak = true;
+            break;
+        case 2:
+            return;
+        case 12:
+            toBreak = true;
+            return;
+        default:
+            displayInvalidChoice();
+            continue;
+        }
+    }
+
+    // Try to remove the item (and file)
+    std::string fileName = (std::string) USERS_DIRNAME + "/client_" + 
+        std::to_string(allUsers[userNumber]->getReference()) + "_" +  
+        allUsers[userNumber]->getName() + ".txt";
+    remove(fileName.c_str());
+
+    // Remo
+    allUsers.erase(allUsers.begin()+userNumber);
+
+    // Ending
+    std::cout << "Client removed successfully." << std::endl;
     return;
 }

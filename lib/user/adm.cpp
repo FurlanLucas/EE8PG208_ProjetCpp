@@ -2,8 +2,8 @@
 
 
 adm::adm(std::string name_, std::string surName_, std::string email_,
-    std::string password_)
-    : user(name_, surName_, email_, password_){
+    std::string password_, int reference_)
+    : user(name_, surName_, email_, password_, reference_){
 
 }
 
@@ -13,7 +13,8 @@ adm::adm(std::string fileName){
     myfile.open(fileName);  // Creates a client class based in a file source
 
     // Main inputs
-    getline(myfile, name);
+    myfile >> reference;
+    myfile.ignore(1, '\n'); getline(myfile, name);
     getline(myfile, surName);
     getline(myfile, email);
     getline(myfile, password);

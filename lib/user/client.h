@@ -33,10 +33,10 @@ protected:
 public:
     client();
     client(std::string name, std::string surName, std::string email,
-        std::string password_);
+        std::string password_, int reference_);
     client(std::string fileName);
     int *getAttributes(void);
+    int save(std::string dirName); // Function to save the client info 
 };
-
 
 #endif

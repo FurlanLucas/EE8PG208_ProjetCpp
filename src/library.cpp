@@ -291,6 +291,7 @@ int library::toFile(media *item){
     outFile << item->getFileInfo() << std::endl;
 
     // Output return
+    outFile.close();
     return 0;
 }
 
@@ -362,7 +363,7 @@ int library::removeItem(int itemToRemove, bool toFile){
             return 1;
         }
     }
-    
+
     // Try to remove the item
     try{
         items.erase(items.begin()+itemToRemove);

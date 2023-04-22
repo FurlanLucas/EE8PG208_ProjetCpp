@@ -24,7 +24,7 @@ protected:
 // Class member functions
 public:
     adm(std::string name, std::string surName, std::string email,
-        std::string password_);
+        std::string password_, int reference_);
     adm(std::string fileName);
     void showClientsInfo(void);
 };

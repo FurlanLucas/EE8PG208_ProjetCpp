@@ -7,11 +7,12 @@ user::user(){
 
 
 user::user(std::string name_, std::string surName_, std::string email_,
-    std::string password_)
+    std::string password_, int reference_)
     : name(name_)
     , surName(surName_)
     , email(email_)
-    , password(password_){
+    , password(password_)
+    , reference(reference_){
 }
 
 
@@ -30,15 +31,17 @@ std::string user::getEmail(){
 }
 
 
+int user::getReference(void){
+    return reference;
+}
+
+
 int user::checkID(std::string email_, std::string password_){
     // Function that returns if the credentials of the user were correct.
     // It comparaires the email and the password only, and will return 1
     // only if both credentials are the same.
 
-    if (!email.compare(email_) && !password.compare(password_))
-        return true;
-    else
-        return false;
+    return (!email.compare(email_) && !password.compare(password_));
 }
 
 
@@ -62,3 +65,12 @@ std::string user::toUpperCase(std::string inputString){
 	return inputString;
 }
 
+
+int user::save(std::string dirName){
+    // Function to save the client info 
+    std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+        "user::save(std::string dirName)' function in " << __FILE__ <<
+        "\n\tBased class method called." << std::endl;
+
+    return -1;
+}

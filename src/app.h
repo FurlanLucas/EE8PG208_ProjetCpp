@@ -69,9 +69,8 @@ private:
     void logout(void);               // Login of an user
     int takeItem(void);              // Take an item for a user
     void showMyItems(void);          // Function to show all items of a client
-    void showClients(void);          // Show all clients in the currant library
+    void showUsers(void);            // Show all users in the currant library
     void displayInvalidChoice(void); // Display the text of a invalid choice
-    void loadClientsItems(void);     // Load the client items base in int array
     int newUser(void);               // Function that creates a new user
     int newClientUser(void);         // Function that creates a new client
     int newAdmUser(void);            // Function that creates a new adm
@@ -82,6 +81,7 @@ private:
     std::string takeSecretPassword(std::string informationName); // See doc.
     void forgotPassword(void);       // Function to reset a user password
     void removeItem(void);           // Function to remove an item
+    void removeClient(void);         // Function to remove a client
 
 };
 
