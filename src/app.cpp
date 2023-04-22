@@ -51,8 +51,7 @@ int app::menu(void){
     // were executed sucessfully ou 1 if it was not.
 
     while(!toBreak){
-        // Menu printing
-        system("CLS");
+        // Menu printing        
         if(cLibrary->getItemsNumber())
             cLibrary->showItems();
         displayMenuOptions();
@@ -79,7 +78,8 @@ int app::menu(void){
             takeItem();
             break;
 
-        case 5: // [5] Return to general library            
+        case 5: // [5] Return to general library
+            system("CLS");            
             cLibrary = new library;
             break;
 
@@ -133,6 +133,7 @@ int app::menu(void){
             displayInvalidChoice();
             break;
         }
+        
     }
 
     // Exit the menu (after while)
@@ -210,6 +211,7 @@ int app::search(void){
             results = loadedLibrary->search(toSearch);
 
         // Verify if there was any result
+        system("CLS");
         if(results->getItemsNumber()){
             std::cout << "\nShowing " << results->getItemsNumber() << 
                 " results." << std::endl;
@@ -1021,8 +1023,8 @@ void app::removeItem(void){
         }
     }
 
-    // Try to remove the item
-    if(target->removeItem(itemNumber)){
+    // Try to remove the item (and file)
+    if(target->removeItem(itemNumber, true)){
         std::cout << "\nLine " << __LINE__ << ": Error executing 'void" << 
             " app::removeItem(void)' function in " << __FILE__ << 
             ".\n\tIt was not possible to remove the item." << std::endl;
@@ -1031,16 +1033,12 @@ void app::removeItem(void){
 
     // Remove the item from the loaded library (if necessary)
     if(cLibrary->getItemsNumber()>0){
-        for(int i=0; i<loadedLibrary->getItemsNumber();i++){
-            if(loadedLibrary->getItemsReference(i) == 
-                cLibrary->getItemsReference(itemNumber)){
-                
-                loadedLibrary->removeItem(i);
-                break;
-            }
-        }
+        int ref = cLibrary->getItemsReference(itemNumber);
+        int pos = loadedLibrary->getPositionByReference(ref);
+        loadedLibrary->removeItem(pos);
     }
 
+    // Remove item
     std::cout << "Item removed successfully." << std::endl;
     return;
 }

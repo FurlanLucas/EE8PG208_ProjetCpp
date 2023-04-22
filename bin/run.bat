@@ -1,5 +1,4 @@
 @echo off
-cls
 setlocal EnableDelayedExpansion
 
 rem Dispay the number of lines in all .cpp and .h files -------------------------

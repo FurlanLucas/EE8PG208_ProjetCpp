@@ -345,13 +345,27 @@ library *library::partition(int *refInputs){
 }
 
 
-int library::removeItem(int itemToRemove){
+int library::removeItem(int itemToRemove, bool toFile){
     // Function that removes an item from the current. Returns 1 if a error
     // has occurred.
 
+    // Remove the file
+    if (toFile){
+        std::string fileName = dirName + "/" + 
+            std::to_string(items[itemToRemove]->getReference()) + 
+            "_" +  items[itemToRemove]->getTitle().substr(0, CAR_TITLE_TXT) +  "_" + 
+            items[itemToRemove]->getAuthor().substr(0, CAR_AUTHOR_TXT) + ".txt";
+        if(remove(fileName.c_str())){
+            std::cout << "\nLine " << __LINE__ << ": Error executing 'libr" << 
+                "ary::removeItem(int itemToRemove)' function in " << __FILE__ << 
+                ".\n\tIt was not possible to remove the items file." << std::endl;
+            return 1;
+        }
+    }
+    
+    // Try to remove the item
     try{
         items.erase(items.begin()+itemToRemove);
-        return 0;
     }
     catch(int erro){
         std::cout << "\nLine " << __LINE__ << ": Error executing 'libr" << 
@@ -359,10 +373,25 @@ int library::removeItem(int itemToRemove){
             ".\n\tIt was not possible to remove the item." << std::endl;
         return 1;
     }
+
+    return 0;
 }
 
 
 int library::getItemsReference(int item){
     // Function that returns an item reference code
     return items[item]->getReference();
+}
+
+
+int library::getPositionByReference(int reference){
+    // Function that returns an item position in library by the reference.
+    // If no item was found, return -1.
+
+    for(int i=0; i<items.size();i++){
+        if(items[i]->getReference() == reference)
+            return i;
+    }
+
+    return -1;
 }

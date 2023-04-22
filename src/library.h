@@ -49,9 +49,10 @@ public:
     library *partition(int *refInputs); // Take a part of the library given by ref.
     void showItems(void);             // Show all items in the library
     void showItemDes(int itemToShow); // Function that returns an specific item
-    int removeItem(int itemToRemove); // Function that removes an item 
+    int removeItem(int itemToRemove, bool toFil =false); // Removes an item 
     int addItem(media *itemToAdd, bool toSave=false);  // Add a new item
     int getItemsReference(int item);   // Function that returns an item ref.
+    int getPositionByReference(int reference); // Returns the item position
 
 private:  
     media * itemFromFile(std::string fileName); // Create a item from a fileName
