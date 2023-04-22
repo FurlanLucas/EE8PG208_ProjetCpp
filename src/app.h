@@ -81,6 +81,7 @@ private:
     std::string takeSingleInfo(std::string informationName, bool isInt = false);
     std::string takeSecretPassword(std::string informationName); // See doc.
     void forgotPassword(void);       // Function to reset a user password
+    void removeItem(void);           // Function to remove an item
 
 };
 

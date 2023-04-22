@@ -40,6 +40,8 @@ app::~app(void){
 
     std::cout << "Thank you for using our application." << std::endl;
     std::cout << "Exiting application." << std::endl;
+    delete loadedLibrary;
+    delete cLibrary;
 }
 
 
@@ -50,6 +52,9 @@ int app::menu(void){
 
     while(!toBreak){
         // Menu printing
+        system("CLS");
+        if(cLibrary->getItemsNumber())
+            cLibrary->showItems();
         displayMenuOptions();
 
         // Take the option and check if it is a valid integer number
@@ -74,7 +79,7 @@ int app::menu(void){
             takeItem();
             break;
 
-        case 5: // [5] Return to general library
+        case 5: // [5] Return to general library            
             cLibrary = new library;
             break;
 
@@ -105,9 +110,20 @@ int app::menu(void){
                 displayInvalidChoice();
             break;
 
-        case 9:
-            createItem();
+        case 9: // [9] Create/add an item (adm use only)
+            if(isLogged && isAdm)
+                createItem();
+            else
+                displayInvalidChoice();
             break;
+        
+        case 10: // [10] Remove an item (adm use only)
+            if(isLogged && isAdm)
+                removeItem();
+            else
+                displayInvalidChoice();
+            break;
+
 
         case 12: // [12] Exit 
             toBreak = true;
@@ -185,13 +201,10 @@ int app::search(void){
     std::getline(std::cin, toSearch);    
     std::cin.clear();
 
-    // Verify in which library it has to search for  
-    //library* results = cLibrary->getItemsNumber() ? cLibrary : loadedLibrary;
-    //library* results;
-
     // Search for the item and show the results
     try{  
-        if (cLibrary->getItemsNumber())
+
+        if(cLibrary->getItemsNumber())
             results = cLibrary->search(toSearch);
         else
             results = loadedLibrary->search(toSearch);
@@ -200,24 +213,20 @@ int app::search(void){
         if(results->getItemsNumber()){
             std::cout << "\nShowing " << results->getItemsNumber() << 
                 " results." << std::endl;
+            delete cLibrary;
             cLibrary = results;
-            system("CLS");
-            cLibrary->showItems();
         }
-        else{
-            std::cout << "No items were found." << std::endl;
-        }
+        else
+            std::cout << "No items were found." << std::endl;     
     }
     catch(int errorN){
         std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
             "app::search(void)' function in " << __FILE__ << ".\n\tIt is not"
             " possible to show items within a empty library.\n";
-        delete results;
         toBreak = true;
         return 1;
     }
 
-    delete results;
     return 0;
 }
 
@@ -269,6 +278,7 @@ int app::login(void){
         // Check if it is the correct ID;
         if (allUsers[i]->checkID(email, password)) {
             cUser = allUsers[i];
+            system("CLS");
             std::cout << "Welcome back " << cUser->getSurName(); 
             std::cout << "! You are now ";
             SetConsoleTextAttribute(hConsole, LOGIN_COLOR);
@@ -695,9 +705,9 @@ int app::createItem(void){
     title = takeSingleInfo("item's title");
     if(title == "0") return 0; // Check for return option
     addDate = 12;
-    year = std::stoi(takeSingleInfo("item's year of creation"));
+    year = std::stoi(takeSingleInfo("item's year of creation", true));
     if(year == 0) return 0; // Check for return option
-    totalNumber = std::stoi(takeSingleInfo("avaiable number"));
+    totalNumber = std::stoi(takeSingleInfo("avaiable number", true));
     if(totalNumber == 0) return 0; // Check for return option
 
     // ------------------------------------------------------------
@@ -725,7 +735,7 @@ int app::createItem(void){
     // -------------------------------------------------------------
     switch(localOption){
     case 1: // Will create a book
-        pagesNumber = std::stoi(takeSingleInfo("pages number"));
+        pagesNumber = std::stoi(takeSingleInfo("pages number", true));
         if(pagesNumber == 0) return 0; // Check for return option
         collection = takeSingleInfo("collection");
         if(collection == "0") return 0; // Check for return option
@@ -737,39 +747,39 @@ int app::createItem(void){
             totalNumber, totalNumber, pagesNumber, collection, summary, editor);
         break;
     case 2: // Will create a magazine
-        pagesNumber = std::stoi(takeSingleInfo("pages number"));
+        pagesNumber = std::stoi(takeSingleInfo("pages number", true));
         collection = takeSingleInfo("collection");
         editor = takeSingleInfo("editor");
         summary = takeSingleInfo("summary");
-        artNumber = std::stoi(takeSingleInfo("number of articles"));
+        artNumber = std::stoi(takeSingleInfo("number of articles", true));
         newItem = new magazine(reference, author, title, addDate, year,
             totalNumber, totalNumber, pagesNumber, collection, summary, editor, 
             artNumber);
         break;
     case 3: // Will create a CD
-        timeDuration = std::stoi(takeSingleInfo("time duration"));
-        production = takeSingleInfo("collection");
-        trackNumber = std::stoi(takeSingleInfo("number of articles"));
+        timeDuration = std::stoi(takeSingleInfo("time duration", true));
+        production = takeSingleInfo("production");
+        trackNumber = std::stoi(takeSingleInfo("track number", true));
         newItem = new CD(reference, author, title, addDate, year, totalNumber,
             totalNumber, timeDuration, production, trackNumber);
         break;
     case 4: // Will create a digital ressource        
         format = takeSingleInfo("format");
-        size = std::stoi(takeSingleInfo("file size"));
+        size = std::stoi(takeSingleInfo("file size", true));
         link = takeSingleInfo("link for the ressource");
         newItem = new digital(reference, author, title, addDate, year, totalNumber,
             totalNumber, format, size, link);
         break;
     case 5: // Will create a VHS
-        timeDuration = std::stoi(takeSingleInfo("time duration"));
+        timeDuration = std::stoi(takeSingleInfo("time duration", true));
         production = takeSingleInfo("production");
         newItem = new VHS(reference, author, title, addDate, year, totalNumber,
             totalNumber, timeDuration, production);
         break;
     case 6: // Will create a DVD
-        timeDuration = std::stoi(takeSingleInfo("time duration"));
+        timeDuration = std::stoi(takeSingleInfo("time duration", true));
         production = takeSingleInfo("production");
-        trackNumber = std::stoi(takeSingleInfo("track number"));
+        trackNumber = std::stoi(takeSingleInfo("track number", true));
         newItem = new DVD(reference, author,title, addDate, year, totalNumber,
             totalNumber, timeDuration, production, trackNumber);
         break;
@@ -780,7 +790,7 @@ int app::createItem(void){
         return 1;
     }
 
-    if(!loadedLibrary->addItem(newItem)){
+    if(loadedLibrary->addItem(newItem, true)){
         std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
             "app::createItem(void)' function in " << __FILE__ << ".\nIt was" <<
             " not possible to append the item.\n";
@@ -788,9 +798,8 @@ int app::createItem(void){
     }
     
     // Ending
-    loadedLibrary->addItem(newItem, true);
-    std::cout << "Item created sucessfully. Tap 2 to show the items or seach for" <<
-        "the item if the command 1.";
+    std::cout << "Item created sucessfully. Tap [2] to show all the items or " <<
+        "seach for it with command [1] search.";
     return 0;
 }
 
@@ -959,4 +968,79 @@ void app::forgotPassword(void){
             }
         }
     }
+}
+
+
+void app::removeItem(void){
+    // Function to remove an item from the loaded library.
+
+    //Variable declaration
+    bool localBreak = false;
+    int itemNumber;
+    library* &target = (cLibrary->getItemsNumber()>0) ? cLibrary : loadedLibrary;
+
+    // Local loop for local menu
+    while(!localBreak){
+        std::cout << "Enter the item number to be removed: ";
+        itemNumber = takeIntChoice();
+
+        if(itemNumber>target->getItemsNumber()){
+            std::cout << "There is no such item in the library.\n";
+            continue;
+        }
+
+        localBreak = true;
+    }
+
+    // Confirmation
+    std::cout << "Item discription:\n" << std::endl;
+    target->showItemDes(--itemNumber);
+    std::cout << "\nAre you sure that you want to remove the item " <<
+        "permanently?" << std::endl;
+    std::cout << " [1] Yes" << std::endl;
+    std::cout << " [2] No, return to main menu" << std::endl;    
+    std::cout << "[12] No, exit application" << std::endl;
+    
+    // Local loop for local menu
+    localBreak = false;
+    while(!localBreak){
+        std::cout << "\nEnter your option: ";
+        int localOption = takeIntChoice();
+        switch(localOption)    {
+        case 1:
+            localBreak = true;
+            break;
+        case 2:
+            return;
+        case 12:
+            toBreak = true;
+            return;
+        default:
+            displayInvalidChoice();
+            continue;
+        }
+    }
+
+    // Try to remove the item
+    if(target->removeItem(itemNumber)){
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'void" << 
+            " app::removeItem(void)' function in " << __FILE__ << 
+            ".\n\tIt was not possible to remove the item." << std::endl;
+        return;
+    }
+
+    // Remove the item from the loaded library (if necessary)
+    if(cLibrary->getItemsNumber()>0){
+        for(int i=0; i<loadedLibrary->getItemsNumber();i++){
+            if(loadedLibrary->getItemsReference(i) == 
+                cLibrary->getItemsReference(itemNumber)){
+                
+                loadedLibrary->removeItem(i);
+                break;
+            }
+        }
+    }
+
+    std::cout << "Item removed successfully." << std::endl;
+    return;
 }

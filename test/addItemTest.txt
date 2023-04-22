@@ -1,0 +1,117 @@
+6
+gabriel.silva@gmail.com
+1
+testADM
+9
+123456
+1
+Book author test
+1
+Book title test (OK)
+1
+2020
+1
+5
+1
+1
+265
+1
+myColletion
+1
+myEditor
+1
+Este é um sumário bem bacana.
+1
+9
+999888
+1
+Magazine author João
+1
+Magazine title "Best magazine"
+1
+1998
+1
+5
+1
+2
+265
+1
+myColletion
+1
+myEditor
+1
+Este é um sumário bem bacana, mas da revista.
+1
+69
+1
+9
+123489
+1
+CD author
+1
+CD name
+1
+2000
+1
+5
+1
+3
+1221
+1
+CD produciton
+1
+555
+1
+9
+789789
+1
+digitalRessource
+1
+digitalRessource title "Best pdf"
+1
+2020
+1
+5
+1
+4
+pdf
+1
+156
+1
+www.myTest.eiseirb-matmec.fr
+1
+9
+895135
+1
+VHS video famoso
+1
+VHS title "Best movie ever"
+1
+1989
+1
+5
+1
+5
+66
+1
+myProduction
+1
+9
+895135
+1
+DVD video famoso
+1
+DVD title "Best cinema movie ever, part2"
+1
+2005
+1
+5
+1
+6
+66
+1
+myProduction
+1
+456
+1
+2

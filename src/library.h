@@ -51,6 +51,7 @@ public:
     void showItemDes(int itemToShow); // Function that returns an specific item
     int removeItem(int itemToRemove); // Function that removes an item 
     int addItem(media *itemToAdd, bool toSave=false);  // Add a new item
+    int getItemsReference(int item);   // Function that returns an item ref.
 
 private:  
     media * itemFromFile(std::string fileName); // Create a item from a fileName

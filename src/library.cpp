@@ -206,9 +206,9 @@ void library::showItems(void){
     // Item display
     for(int i=0; i<items.size();i++){
         std::string title = items[i]->getTitle() +
-        "                                                              " ;
+            "                                                              " ;
         std::string author = items[i]->getAuthor() +
-        "                                                              " ;
+            "                                                              " ;
         std::string type = typeid(*(items[i])).name();
         std::cout << " [" << i+1 << "] \t "<< items[i]->getReference() << " \t "
           << title.substr(0, CAR_TITLE) << " \t " << author.substr(0, CAR_AUTHOR)
@@ -329,8 +329,10 @@ library *library::partition(int *refInputs){
 
                 // Tries to append the required item
                 if(myPartition->addItem(items[i])){
-                    std::cout << "Error in 'library::partition(int *refInputs)'" << 
-                        " function. It was not possible to append item." << std::endl;
+                    std::cout << "\nLine " << __LINE__ << ": Error executin" << 
+                    "g 'int library::lendItem(int itemToLend)' function in" 
+                    << __FILE__ << " .\n\tIt was not possible to append" <<
+                    " item" << std::endl;
                     return NULL;
                 }
 
@@ -340,4 +342,27 @@ library *library::partition(int *refInputs){
     }
 
     return myPartition;
+}
+
+
+int library::removeItem(int itemToRemove){
+    // Function that removes an item from the current. Returns 1 if a error
+    // has occurred.
+
+    try{
+        items.erase(items.begin()+itemToRemove);
+        return 0;
+    }
+    catch(int erro){
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'libr" << 
+            "ary::removeItem(int itemToRemove)' function in " << __FILE__ << 
+            ".\n\tIt was not possible to remove the item." << std::endl;
+        return 1;
+    }
+}
+
+
+int library::getItemsReference(int item){
+    // Function that returns an item reference code
+    return items[item]->getReference();
 }
