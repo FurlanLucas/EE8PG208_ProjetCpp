@@ -27,7 +27,7 @@ Este é um sumário bem bacana.
 1
 Magazine author João
 1
-Magazine title "Best magazine"
+Magazine title Best magazine
 1
 1998
 1
@@ -67,7 +67,7 @@ CD produciton
 1
 digitalRessource
 1
-digitalRessource title "Best pdf"
+digitalRessource title Best pdf
 1
 2020
 1
@@ -85,7 +85,7 @@ www.myTest.eiseirb-matmec.fr
 1
 VHS video famoso
 1
-VHS title "Best movie ever"
+VHS title Best movie ever
 1
 1989
 1
@@ -101,7 +101,7 @@ myProduction
 1
 DVD video famoso
 1
-DVD title "Best cinema movie ever, part2"
+DVD title Best cinema movie ever, part2
 1
 2005
 1

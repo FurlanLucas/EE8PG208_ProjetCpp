@@ -61,7 +61,7 @@ int client::save(std::string dirName){
 
     // Item file name
     std::string fileName = dirName + "/client_" + std::to_string(reference) + 
-        "_" +  (name+surName).substr(0, CAR_NAME_TXT);
+        "_" +  name;
 
     // Out file  
     std::ofstream outFile;

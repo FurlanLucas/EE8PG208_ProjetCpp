@@ -281,11 +281,11 @@ int app::login(void){
     std::cout << std::endl;
 
     // Search for the information within the users data
-    for (int i=0;i<allUsers.size();i++) {
+    for (user *uElement : allUsers) {
 
         // Check if it is the correct ID;
-        if (allUsers[i]->checkID(email, password)) {
-            cUser = allUsers[i];
+        if (uElement->checkID(email, password)) {
+            cUser = uElement;
             system("CLS");
             std::cout << "Welcome back " << cUser->getSurName(); 
             std::cout << "! You are now ";
@@ -296,7 +296,7 @@ int app::login(void){
             isLogged = true; 
 
 
-            std::string type = typeid(*(allUsers[i])).name();
+            std::string type = typeid(*uElement).name();
 
             // Check if it is an adm            
             if (type.find("client")!=std::string::npos){
@@ -401,11 +401,11 @@ void app::showUsers(void){
 
     std::cout << "\tName \t Surname \t Code" << std::endl;
     // Search for the information within the users data
-    int j = 0;
-    for (int i=0;i<allUsers.size();i++) {  
+    int j = 1;
+    for (user *uElement : allUsers) {  
         // Take the type of user    
-        std::cout << "[" << ++j << "]\t" << allUsers[i]->getSurName() <<  
-            '\t' << allUsers[i]->getName() << '\t' << std::endl;                      
+        std::cout << "[" << j++ << "]\t" << uElement->getSurName() <<  
+            '\t' << uElement->getName() << '\t' << std::endl;                      
     }
     std::cout << std::endl;
 }

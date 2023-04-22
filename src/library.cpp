@@ -201,20 +201,21 @@ void library::showItems(void){
     // Label display
     std::cout << "\n\n  N \t Reference \t Title \t\t\t\t\t\t\t Autor \t\t\t\t\t" <<
         "Number \t Year \t Type" << std::endl;
-    
 
     // Item display
-    for(int i=0; i<items.size();i++){
-        std::string title = items[i]->getTitle() +
+    int i = 1;
+    for(media *element : items){
+        std::string title = element->getTitle() +
             "                                                              " ;
-        std::string author = items[i]->getAuthor() +
+        std::string author = element->getAuthor() +
             "                                                              " ;
-        std::string type = typeid(*(items[i])).name();
-        std::cout << " [" << i+1 << "] \t "<< items[i]->getReference() << " \t "
+        std::string type = typeid(*element).name();
+        std::cout << " [" << i++ << "] \t "<< element->getReference() << " \t "
           << title.substr(0, CAR_TITLE) << " \t " << author.substr(0, CAR_AUTHOR)
-          << " \t" << items[i]->getDispNumber() << "/" << items[i]->getTotalNumber()
-          << " \t " << items[i]->getYear() << " \t " << type.substr(1, 8) << "\n";
+          << " \t" << element->getDispNumber() << "/" << element->getTotalNumber()
+          << " \t " << element->getYear() << " \t " << type.substr(1, 8) << "\n";
     }
+
     std::cout << "\n\n";
 }
 
@@ -230,10 +231,10 @@ library *library::search(std::string nameToSearch){
     library *results = new library;
 
     // Search in currant library the matches
-    for(int i=0; i<items.size(); i++){
+    for(media *element : items){
         // if it is fund, add the item to results
-        if(items[i]->searchFor(nameToSearch)){
-            results->addItem(items[i]);
+        if(element->searchFor(nameToSearch)){
+            results->addItem(element);
         }
     }
 
@@ -322,14 +323,14 @@ library *library::partition(int *refInputs){
     int maxItems = refInputs[0];
 
     // Search in the library
-    for(int i=0; i<items.size(); i++){
+    for(media *element : items){
         // Search of the item
-        for(int j=1; j<=maxItems; j++){
+        for(int i=1; i<=maxItems; i++){
             // Test if the item is required
-            if(items[i]->getReference()==refInputs[j]){
+            if(element->getReference()==refInputs[i]){
 
                 // Tries to append the required item
-                if(myPartition->addItem(items[i])){
+                if(myPartition->addItem(element)){
                     std::cout << "\nLine " << __LINE__ << ": Error executin" << 
                     "g 'int library::lendItem(int itemToLend)' function in" 
                     << __FILE__ << " .\n\tIt was not possible to append" <<
