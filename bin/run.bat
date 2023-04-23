@@ -14,7 +14,7 @@ echo cpp files count = %counter%
 
 set counter=0
 for %%A in (..\src\*.h ..\lib\media\*.h ..\lib\user\*.h) do set /a counter+=1
-echo Header files count = %counter%
+echo header files count = %counter%
 
 set counter=0
 for %%A in (..\src\*.h ..\src\*.cpp) do set /a counter+=1

@@ -7,7 +7,8 @@ app::app(void)
     , isAdm(false) {
 
     // First displays
-    std::cout << "\nInitializing application." << std::endl;
+    system("CLS");
+    std::cout << "Initializing application." << std::endl;
     loadedLibrary = new library;
     cLibrary = new library("NULL");
 
@@ -52,8 +53,6 @@ int app::menu(void){
 
     while(!toBreak){
         // Menu printing        
-        if(cLibrary->getItemsNumber())
-            cLibrary->showItems();
         displayMenuOptions();
 
         // Take the option and check if it is a valid integer number
@@ -105,14 +104,14 @@ int app::menu(void){
             if(!isLogged)
                 forgotPassword();
             else if(isAdm)
-                takeItem();
+                returnItem();
             else
                 displayInvalidChoice();
             break;
 
         case 9: // [9] Create/add an item (adm use only)
             if(isLogged && isAdm)
-                createItem();
+                addItem();
             else
                 displayInvalidChoice();
             break;
@@ -150,8 +149,19 @@ int app::menu(void){
 
 void app::displayMenuOptions(void){
     // Function that display all possible choices in application menu.
-    // Void function.
+    // Void function. Is there is any item in the current library, shows
+    // it. Display also the library in process.
 
+    // Display current library
+    if(cLibrary->getItemsNumber())
+            cLibrary->showItems();
+    else{
+        std::cout << "Working in "; 
+        SetConsoleTextAttribute(hConsole, ATT_COLOR);
+        std::cout << "general Library";
+        SetConsoleTextAttribute(hConsole, 15);
+        std::cout << "." << std::endl;
+    }
 
     std::cout << "\nList of commands:" << std::endl;
     std::cout << " [1] Search for an item" << std::endl;
@@ -167,8 +177,8 @@ void app::displayMenuOptions(void){
         if(isAdm){
             std::cout << " [7] Display clients info" << std::endl;
             std::cout << " [8] Return un item" << std::endl;
-            std::cout << " [9] Add item" << std::endl;
-            std::cout << "[10] Remove item" << std::endl;            
+            std::cout << " [9] Add/create item" << std::endl;
+            std::cout << "[10] Remove/delete item" << std::endl;            
             std::cout << "[11] Remove cliet" << std::endl;
         }
 
@@ -326,55 +336,85 @@ int app::takeItem(void){
     // have ocurred. If the current library is empty, the choice is made within
     // the general loaded library.
 
+    // Variable declaration
+    library* &target = (cLibrary->getItemsNumber()>0) ? cLibrary : loadedLibrary;
+    bool localCheck = false;
+    int localOption;
+    int itemNumber;
+
     // Check if a user is logged in
     if (!isLogged){
         std::cout << "For lend an item, a login is needed." << std::endl;
         login();
     }
+    
+    while(!localCheck){
+        // Take the users choice
+        std::cout << "Which item do you want to take? ";
+        itemNumber = takeIntChoice();
+        itemNumber--;
 
+        // Confirms the choice
+        std::cout << "You want to lend the following item:\n\n";
+        if(cLibrary->getItemsNumber()==0)
+            loadedLibrary->showItemDes(itemNumber);
+        else
+            cLibrary->showItemDes(itemNumber);
+        std::cout << "\nDo you confirme your choice?" << std::endl;
+        std::cout << " [1] Yes" << std::endl;        
+        std::cout << " [2] No, return to main menu" << std::endl;
+        std::cout << "[12] Exit" << std::endl;
+        std::cout << "\nEnter your choice: ";
+        localOption = takeIntChoice();
 
-    // Show items
-    if(cLibrary->getItemsNumber()==0)
-        loadedLibrary->showItems();
-    else
-        cLibrary->showItems();
+        switch(localOption){
+        case 1:
+            localCheck = true;
+            break;
+        case 2:
+            return 0;
+        case 12:
+            toBreak = true;
+            return 0;
+        default:
+            displayInvalidChoice();
+            break;
+        }
+    }
 
-    // Take the users choice
-    std::cout << "Which item do you want to take? ";
-    int itemNumber = takeIntChoice();
-    itemNumber--;
-
-    // Confirms the choice
-    std::cout << "You want to lend the following item:\n\n";
-    if(cLibrary->getItemsNumber()==0)
-        loadedLibrary->showItemDes(itemNumber);
-    else
-        cLibrary->showItemDes(itemNumber);
-    std::cout << "Press 1 to confirm or 0 to return to menu: ";
-    int confirmation;
-    std::cin >> confirmation;
-    if(!confirmation)
+    // Check if it is possible to take the item
+    if(itemNumber >= target->getItemsNumber() || itemNumber < 0){
+        std::cout << "There is not such item in the library.\n";
         return 0;
+    }
+
+    // Check if the user already has this item
+    int itemReference = target->getItemsReference(itemNumber);
+    int pos = userItems->getPositionByReference(itemReference);
+    if(pos>=0){
+        system("CLS");
+        std::cout << "You already have this item.\n";
+        return 0;
+    }
 
     // Take the item
-    if(cLibrary->getItemsNumber()==0){
-        if(!loadedLibrary->lendItem(itemNumber))
-            return 0;
-        else{
-            std::cout << "An error ocurred trying to lend an item." << std::endl;
-            return 1;
-        }
+    int out = target->lendItem(itemNumber);
+    if(out==-1){
+        system("CLS");
+        std::cout << "We can not lend this item becaus there is not" <<
+            " other units avaiable." << std::endl;
+        return 0;
     }
-    else{
-        if(!cLibrary->lendItem(itemNumber))
-            return 0;
-        else{
-            std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
-            "app::takeItem(void)' function in " << __FILE__ << ".\nIt was " <<
-            "not possible to lend an item.\n";
-            return 1;
-        }
+    else if(out == 1){
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+        "app::takeItem(void)' function in " << __FILE__ << " file.\nIt " <<
+        " was not possible to lend an item." << std::endl;
+        return 1;
     }
+
+    system("CLS");
+    std::cout << "You successfully took the item." << std::endl;
+    return 0;
 }
 
 
@@ -428,6 +468,8 @@ void app::logout(void){
 
     isLogged = false;
     isAdm = false;
+
+    system("CLS");
 
     // Printing
     std::cout << "By " << cUser->getSurName();
@@ -643,18 +685,18 @@ int app::loadUsers(void){
 }
 
 
-int app::createItem(void){
+int app::addItem(void){
     // Function that creates a new item to be add to the current library. Returns
     // 1 if it was executed sucessfully and 0 in any other case. The creation is a
     // while loop in each information, been possible to rewrite the last attribute
     // or even return to the previous attribute. The local menu, with localOption
     // and localBreak does not interfere in the global menu (option and toBreak).
+    // This function also add an item to the total number of it (not creating
+    // another). 
 
     // Variable declaration
-    int localOption;               // Takes the option for the menu display (local)
-    bool localBreak = false;       // Controls the while loop for the menu (local)
     int reference;                 // Item's code of reference
-    std::string author;            // Autor
+    std::string author;            // Author
     std::string title;             // Ttem's name
     int addDate;                   // Item's inclusion date
     int year;                      // Item's year of creation
@@ -670,7 +712,42 @@ int app::createItem(void){
     std::string format;            // Format of the digital ressource
     std::string link;              // Link for the digital ressource
     int size;               // Size of the online ressource
-    media * newItem;               // New item to be added
+    media * newItem;               // New item to be added   
+    int localOption;               // Takes the option for the menu display (local)
+    bool localBreak = false;       // Controls the while loop for the menu (local)
+    int itemNumber;                // Number of the item to be added
+    library* &target = (cLibrary->getItemsNumber()>0) ? cLibrary : loadedLibrary;
+
+    MENU:
+    // Display options of item
+    std::cout << "\n\n";
+    std::cout << "Do you wanto to:" << std::endl;
+    std::cout << " [1] Create a new item" << std::endl;
+    std::cout << " [2] Add an unit to an existem item" << std::endl;
+    std::cout << " [3] Return to main menu" << std::endl;
+    std::cout << "[12] Exit" << std::endl;
+    std::cout << "\nEnter your option: ";
+
+    // Chose the type of the item to be created
+    localOption = takeIntChoice();
+    
+    // If the choice is valid, jumps to the next part
+    switch(localOption){
+        case 1: 
+            break;
+        case 2:  // Add item 
+            goto ADD_ITEM_MENU;         
+        case 3:
+            system("CLS");
+            return 0;
+        case 12:
+            toBreak = true;
+            return 0;            
+        default:        
+            displayInvalidChoice();
+            goto MENU;
+            break;
+    }
 
     // Take the main information (commum for all items / media attributes)
     reference = std::stoi(takeSingleInfo("item's code reference", true));
@@ -686,6 +763,7 @@ int app::createItem(void){
     if(totalNumber == 0) return 0; // Check for return option
 
     // ------------------------------------------------------------
+    localBreak = false;
     while(!localBreak){
         // Display options of item
         std::cout << "\n\n";
@@ -776,6 +854,41 @@ int app::createItem(void){
     std::cout << "Item created sucessfully. Tap [2] to show all the items or " <<
         "seach for it with command [1] search.";
     return 0;
+
+    // Add an item menu -----------------------------------------------------------
+    ADD_ITEM_MENU:
+    std::cout << "Wich item do you want to add? ";
+    itemNumber = takeIntChoice();
+    std::cout << "Item description:\n" << std::endl;
+    target->showItemDes(itemNumber);
+    
+    std::cout << "\nAre you sure that you want to add one of this item?\n";            
+    std::cout << " [1] Yes" << std::endl;
+    std::cout << " [2] No, return to main menu" << std::endl;
+    std::cout << "[12] Exit" << std::endl;
+    std::cout << "\nEnter your option: ";
+    localOption = takeIntChoice();
+
+    if(--itemNumber >= target->getItemsNumber() || itemNumber < 0){
+        std::cout << "There is no such item in the library." << std::endl;
+        goto ADD_ITEM_MENU;
+    }
+
+    switch (localOption){
+    case 1:                
+        target->addItem(itemNumber);
+        system("CLS");
+        std::cout << "Item add with success." << std::endl;            
+        return 0;
+    case 2:
+        return 0;
+    case 3:
+        toBreak = true;
+        return 0;
+    default:
+        displayInvalidChoice();
+        goto ADD_ITEM_MENU;
+    }             
 }
 
 
@@ -950,9 +1063,17 @@ void app::removeItem(void){
     // Function to remove an item from the loaded library.
 
     //Variable declaration
-    bool localBreak = false;
-    int itemNumber;
+    int out;                  // Output integer check (delete and remove item)
+    bool localBreak = false;  // While loop control
+    int localOption;          // Option in local menu
+    int itemNumber;           // Item number to be deleted/removed
     library* &target = (cLibrary->getItemsNumber()>0) ? cLibrary : loadedLibrary;
+
+
+    // -------------------------------------------------------------------------
+    LOCAL_MENU:
+    system("CLS");
+    target->showItems();
 
     // Local loop for local menu
     while(!localBreak){
@@ -966,38 +1087,73 @@ void app::removeItem(void){
 
         localBreak = true;
     }
-
+    
+    // -------------------------------------------------------------------------
     // Confirmation
     std::cout << "Item discription:\n" << std::endl;
     target->showItemDes(--itemNumber);
-    std::cout << "\nAre you sure that you want to remove the item " <<
-        "permanently?" << std::endl;
-    std::cout << " [1] Yes" << std::endl;
-    std::cout << " [2] No, return to main menu" << std::endl;    
-    std::cout << "[12] No, exit application" << std::endl;
+    std::cout << "\nWhat do you want to do?" << std::endl;
+    std::cout << " [1] Remove one item" << std::endl;
+    std::cout << " [2] Remove all items (DELETE ARTICLE)" << std::endl; 
+    std::cout << " [3] Return to main menu" << std::endl; 
+    std::cout << "[12] Exit" << std::endl;
     
     // Local loop for local menu
-    localBreak = false;
-    while(!localBreak){
-        std::cout << "\nEnter your option: ";
-        int localOption = takeIntChoice();
-        switch(localOption)    {
-        case 1:
-            localBreak = true;
-            break;
-        case 2:
-            return;
-        case 12:
-            toBreak = true;
-            return;
-        default:
-            displayInvalidChoice();
-            continue;
-        }
+
+    std::cout << "\nEnter your option: ";
+    localOption = takeIntChoice();
+    switch(localOption){
+    case 1:
+        goto REMOVE_ONE;
+    case 2:
+        goto REMOVE_ALL;
+    case 3:
+        return;
+    case 12:
+        toBreak = true;
+        return;
+    default:
+        displayInvalidChoice();
+        goto LOCAL_MENU;
     }
 
-    // Try to remove the item (and file)
-    if(target->removeItem(itemNumber, true)){
+    // -----------------------------------------------------------------------
+    REMOVE_ALL:
+
+    std::cout << "Are you sure that you want to remove ";
+    std::cout<< " items?" << std::endl;
+    std::cout << " [1] Yes" << std::endl;
+    std::cout << " [2] No, return to main menu" << std::endl; 
+    std::cout << "[12] Exit" << std::endl;
+    std::cout << "\nEnter your option: ";
+    localOption = takeIntChoice();
+    switch(localOption){
+    case 1:
+        break;
+    case 2:
+        return;
+    case 12:
+        toBreak = true;
+        return;
+    default:
+        displayInvalidChoice();
+        goto REMOVE_ALL;
+    }
+
+    // Check if the item exist
+    if(itemNumber >= target->getItemsNumber() || itemNumber < 0){
+        std::cout << "There is not such item in the library." << std::endl;
+        return;
+    }
+
+    // Try to delete all the items (and file)
+    out = target->deleteItem(itemNumber);
+    if(out == 1){
+        std::cout << "There is at least one item with a client yet." <<
+            "You have to return all item to delete it." << std::endl;
+        return;
+    }
+    else if(out == -1){
         std::cout << "\nLine " << __LINE__ << ": Error executing 'void" << 
             " app::removeItem(void)' function in " << __FILE__ << 
             ".\n\tIt was not possible to remove the item." << std::endl;
@@ -1012,6 +1168,18 @@ void app::removeItem(void){
     }
 
     // Ending
+    system("CLS");
+    std::cout << "Item removed successfully." << std::endl;
+    return;
+
+    // ------------------------------------------------------------------------
+    REMOVE_ONE:
+    // Try to remove the item (and file)
+    if(target->removeItem(itemNumber)){
+        std::cout << "There is no items returned to do the action. " <<
+            "You have to return at least one item to delete it." << std::endl;
+    }
+    system("CLS");
     std::cout << "Item removed successfully." << std::endl;
     return;
 }
@@ -1079,5 +1247,100 @@ void app::removeClient(void){
 
     // Ending
     std::cout << "Client removed successfully." << std::endl;
+    return;
+}
+
+
+void app::returnItem(void){
+    // Function to return an item (adm use only)
+
+    // Variable declarations
+    int referenceToSearch;  // Reference for the item that is been took
+    int positionToSearch;   // Position of the item in the library
+    int numberOfLends;      // Number of lends
+    int *userItemsList;     // List of items took by the user
+    int localOption;        // Local option for local menu
+
+    // Take the item reference
+    referenceToSearch = std::stoi(takeSingleInfo("item's reference", true));
+
+    // Take the number of lends
+    positionToSearch = loadedLibrary->getPositionByReference(referenceToSearch);
+    numberOfLends = loadedLibrary->getLendsNumber(positionToSearch);
+    int matchedList[numberOfLends]; // Lists all users that have took the item
+
+    // Display all possible users
+    std::cout << "Possible users:\n" << std::endl;
+    int j = 0;
+    for(int i=0; i<allUsers.size(); i++){ 
+
+        // Take the items of the user
+        userItemsList = allUsers[i]->getAttributes();
+
+        if(userItemsList == NULL)
+                continue; // An adm was found
+
+        for(int itemCounter=1; itemCounter<=userItemsList[0]; itemCounter++){   
+
+            if(userItemsList[itemCounter] == referenceToSearch){
+                matchedList[j++] = i;
+                std::cout << "[" << j << "]\t" << allUsers[i]->getSurName() 
+                    <<  '\t' << allUsers[i]->getName() << '\t' << std::endl; 
+                break; 
+            }
+        }
+    }
+
+    // Check if there is any client with that article 
+    if(j==0){
+        system("CLS");
+        std::cout << "There is not any client with this article." << std::endl;
+        return;
+    }
+    
+
+    // --------------------------------------------------------------------
+    CHOICE_MENU:
+    std::cout << "\nEnter the user wich is returning the item: ";
+    int userToReturn = takeIntChoice();
+
+    // Verify if its a valid choice
+    if(userToReturn>numberOfLends || userToReturn<1){
+        std::cout << "There is no such user in the results shown above.\n";
+        goto CHOICE_MENU;
+    }
+    user* &target = allUsers[matchedList[--userToReturn]];
+
+    // Confirmation
+    std::cout << "Do you confirm the return of the item:\n" << std::endl;
+    loadedLibrary->showItemDes(positionToSearch);
+    std::cout << "\nof the client " << target->getName() << " " << 
+        target->getSurName() << " ?" << std::endl;
+    std::cout << " [1] Yes" << std::endl;
+    std::cout << " [2] No, return to main menu" << std::endl;
+    std::cout << "[12] Exit" << std::endl;
+    std::cout << "\nEnter your option: "; 
+    int option = takeIntChoice();
+
+    switch (option){
+    case 1:
+        system("CLS");
+        loadedLibrary->returnItem(--option);
+        target->returnItem(referenceToSearch);
+        target->save(USERS_DIRNAME);
+        std::cout << "Article returned successfully." << std::endl;
+        break;
+    case 2:
+        return;        
+    case 3:
+        return;
+    case 12:
+        toBreak = true;
+        return;
+    default:
+        displayInvalidChoice();
+        goto CHOICE_MENU;
+    }
+
     return;
 }

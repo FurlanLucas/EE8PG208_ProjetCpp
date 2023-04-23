@@ -39,6 +39,7 @@ public:
     int checkID(std::string email_, std::string password_); // Check credentials
     virtual int *getAttributes(void);
     virtual int save(std::string dirName); // Function to save the user info 
+    virtual int returnItem(int reference);
 
 protected:
     std::string toUpperCase(std::string inputString);

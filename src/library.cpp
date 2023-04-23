@@ -187,6 +187,15 @@ int library::addItem(media *itemToAdd, bool toSave){
 }
 
 
+int library::addItem(int itemToIncrease){
+    // Function to add an item (wich already exist) to the library. It
+    // will return 1 if any error ocurred (given by the function toFile).
+
+    items[itemToIncrease]->addItem();
+    return toFile(items[itemToIncrease]);
+}
+
+
 void library::showItems(void){
     // Function to display main item information for all items in the library,
     // (any user may call).
@@ -298,13 +307,25 @@ int library::toFile(media *item){
 
 
 int library::lendItem(int itemToLend){
-    if(!items[itemToLend]->lendItem())
-        return 0;
-    else{
-        std::cout << "Error in 'library::lendItem(int itemToLend)'" << 
-            " function. There are no more articles available." << std::endl;
+    // Function to lend the item. Returns 1 if any error has ocurred.
+    // If it was not possible to lend the item because there is no more
+    // items avaible, it returns -1;
+
+    if(items[itemToLend]->lendItem()){
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+            "library::lendItem(int itemToLend) function in" << __FILE__ << 
+            " file.\nIt was not possible to lend an item.\n";
+        return -1;
+    }
+
+    if(toFile(items[itemToLend])){
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+            "library::lendItem(int itemToLend) function in" << __FILE__ << 
+            " file.\nIt was not possible to save the item lended.\n";
         return 1;
     }
+
+    return 0;
 }
 
 
@@ -347,22 +368,24 @@ library *library::partition(int *refInputs){
 }
 
 
-int library::removeItem(int itemToRemove, bool toFile){
-    // Function that removes an item from the current. Returns 1 if a error
-    // has occurred.
+int library::deleteItem(int itemToRemove){
+    // Function that removes an item from the current. Returns -1 if a error
+    // has occurred. Return 1 if it is not possible to remove the item
+    // (if there is any copy with a client).
+
+    if(items[itemToRemove]->getDispNumber()!=items[itemToRemove]->getTotalNumber())
+        return 1;
 
     // Remove the file
-    if (toFile){
-        std::string fileName = dirName + "/" + 
-            std::to_string(items[itemToRemove]->getReference()) + 
-            "_" +  items[itemToRemove]->getTitle().substr(0, CAR_TITLE_TXT) +  "_" + 
-            items[itemToRemove]->getAuthor().substr(0, CAR_AUTHOR_TXT) + ".txt";
-        if(remove(fileName.c_str())){
-            std::cout << "\nLine " << __LINE__ << ": Error executing 'libr" << 
-                "ary::removeItem(int itemToRemove)' function in " << __FILE__ << 
-                ".\n\tIt was not possible to remove the items file." << std::endl;
-            return 1;
-        }
+    std::string fileName = dirName + "/" + 
+        std::to_string(items[itemToRemove]->getReference()) + 
+        "_" +  items[itemToRemove]->getTitle().substr(0, CAR_TITLE_TXT) +  "_" + 
+        items[itemToRemove]->getAuthor().substr(0, CAR_AUTHOR_TXT) + ".txt";
+    if(remove(fileName.c_str())){
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'libr" << 
+            "ary::removeItem(int itemToRemove)' function in " << __FILE__ << 
+            ".\n\tIt was not possible to remove the items file." << std::endl;
+        return -1;
     }
 
     // Try to remove the item
@@ -373,6 +396,28 @@ int library::removeItem(int itemToRemove, bool toFile){
         std::cout << "\nLine " << __LINE__ << ": Error executing 'libr" << 
             "ary::removeItem(int itemToRemove)' function in " << __FILE__ << 
             ".\n\tIt was not possible to remove the item." << std::endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+
+int library::removeItem(int itemToRemove){
+    // Function that removes an item from the current. Returns -1 if a error
+    // has occurred. Return 1 if it is not possible to remove the item.
+
+    if(items[itemToRemove]->getDispNumber()<1)
+        return 1;
+
+    // Try to remove the item
+    items[itemToRemove]->removeItem();
+    
+    // Save to the file
+    if(toFile(items[itemToRemove])){
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+            "library::lendItem(int itemToLend) function in" << __FILE__ << 
+            " file.\nIt was not possible to save the item lended.\n";
         return 1;
     }
 
@@ -381,7 +426,12 @@ int library::removeItem(int itemToRemove, bool toFile){
 
 
 int library::getItemsReference(int item){
-    // Function that returns an item reference code
+    // Function that returns an item reference code. If there is not this
+    // in the library, returns -1.
+
+    if(item >= items.size())
+        return -1;
+
     return items[item]->getReference();
 }
 
@@ -397,3 +447,23 @@ int library::getPositionByReference(int reference){
 
     return -1;
 }
+
+
+int library::getLendsNumber(int item){
+    // Function that returns the number of lends for an item
+    return items[item]->getTotalNumber() - items[item]->getDispNumber();
+}
+
+
+void library::returnItem(int item){
+    // Function to return a item from a user.
+    items[item]->returnItem();
+
+    // Save to the file
+    if(toFile(items[item])){
+        std::cout << "\nLine " << __LINE__ << ": Error executing 'int " << 
+            "library::lendItem(int itemToLend) function in" << __FILE__ << 
+            " file.\nIt was not possible to save the item lended.\n";
+        return;
+    }
+} 

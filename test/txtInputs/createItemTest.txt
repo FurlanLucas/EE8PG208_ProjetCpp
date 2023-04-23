@@ -3,6 +3,7 @@ gabriel.silva@gmail.com
 1
 testADM
 9
+1
 123456
 1
 Book author test
@@ -23,6 +24,7 @@ myEditor
 Este é um sumário bem bacana.
 1
 9
+1
 999888
 1
 Magazine author João
@@ -45,6 +47,7 @@ Este é um sumário bem bacana, mas da revista.
 69
 1
 9
+1
 123489
 1
 CD author
@@ -63,6 +66,7 @@ CD produciton
 555
 1
 9
+1
 789789
 1
 digitalRessource
@@ -81,6 +85,7 @@ pdf
 www.myTest.eiseirb-matmec.fr
 1
 9
+1
 895135
 1
 VHS video famoso
@@ -97,6 +102,7 @@ VHS title Best movie ever
 myProduction
 1
 9
+1
 895135
 1
 DVD video famoso

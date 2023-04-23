@@ -88,3 +88,23 @@ int client::save(std::string dirName){
     outFile.close();
     return 0;
 }
+
+
+int client::returnItem(int reference){
+    // Function to change the items list of the user.
+
+    int *newList = new int[itemsLendedRef[0]-1];
+
+    int j=0;
+    for(int i=1; i<=itemsLendedRef[0];i++){
+        if(itemsLendedRef[i]!=reference)
+            newList[++j] = itemsLendedRef[i];
+    }
+
+    newList[0] = --itemsLendedRef[0];
+    delete itemsLendedRef;
+    itemsLendedRef = newList;
+    delete newList;
+
+    return 0;
+}

@@ -50,6 +50,11 @@ int *user::getAttributes(void){
 }
 
 
+int user::returnItem(int reference){
+    return 1;
+}
+
+
 std::string user::toUpperCase(std::string inputString){
   // Function to change all the caractheres to lower case. Used in searchFor
   // function. For inter use only.

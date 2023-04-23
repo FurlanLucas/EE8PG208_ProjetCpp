@@ -52,7 +52,12 @@ int media::lendItem(void){
 
 
 void media::returnItem(void){
-  dispNumber++;
+  if(dispNumber == totalNumber){
+   std::cout << "\nLine " << __LINE__ << ": Error executing 'void" << 
+    " media::returnItem(void)' function in " << __FILE__ << 
+    ".\n\tIt is not possible to return a item wich is not taken.\n";
+  }     
+   dispNumber++;
 }
 
 

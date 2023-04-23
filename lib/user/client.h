@@ -37,6 +37,7 @@ public:
     client(std::string fileName);
     int *getAttributes(void);
     int save(std::string dirName); // Function to save the client info 
+    int returnItem(int reference); // Function to return a item
 };
 
 #endif
