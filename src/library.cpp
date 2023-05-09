@@ -239,12 +239,26 @@ library *library::search(std::string nameToSearch){
     // Creat a library for the results
     library *results = new library;
 
+    size_t pos = 0;
+    std::string token;
+    while ((pos = nameToSearch.find(STRING_DELIM)) != std::string::npos) {
+        token = nameToSearch.substr(0, pos);
+        std::cout << token << std::endl;
+        nameToSearch.erase(0, pos + 1); // pos + delimiter.length()
+        
+        // Search in currant library the matches
+        for(media *element : items){
+            // if it is fund, add the item to results
+            if(element->searchFor(token))
+                results->addItem(element);
+        }
+    }
+    
     // Search in currant library the matches
     for(media *element : items){
         // if it is fund, add the item to results
-        if(element->searchFor(nameToSearch)){
+        if(element->searchFor(nameToSearch))
             results->addItem(element);
-        }
     }
 
     return results; // Return results

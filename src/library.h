@@ -23,12 +23,13 @@
 #include "../lib/media/VHS.h"
 
 // Constant definitions --------------------------------------------------------
-#define ITEMS_DIRNAME "../items"   // Folder name to be loaded
-#define MAXITEMS 2000           // Max number of items in the library
-#define CAR_TITLE 50            // Number of characters to display the item's name
-#define CAR_AUTHOR 30           // Number of characters to display the item's author
-#define CAR_TITLE_TXT 15        // Number of title characters present in file name
-#define CAR_AUTHOR_TXT 10       // Number of author characters present in file name
+#define ITEMS_DIRNAME "../items"  // Folder name to be loaded
+#define STRING_DELIM " "          // String delimiter for search
+#define MAXITEMS 2000             // Max number of items in the library
+#define CAR_TITLE 50              // Number of characters to display the item's name
+#define CAR_AUTHOR 30             // Number of characters to display the item's author
+#define CAR_TITLE_TXT 15          // Number of title characters present in file name
+#define CAR_AUTHOR_TXT 10         // Number of author characters present in file name
 
 class library {
 
