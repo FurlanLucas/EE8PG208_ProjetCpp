@@ -8,12 +8,13 @@
 #define APP_H
 
 // Includes --------------------------------------------------------------------
-#include <string>
+#include <chrono>
 #include <conio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <vector>
 #include <dirent.h>
+#include <iostream>
+#include <stdlib.h>
+#include <string>
+#include <vector>
 #include <windows.h> 
 #include "library.h"
 #include "../lib/media/DVD.h"
@@ -28,17 +29,18 @@
 #include "../lib/user/adm.h"
 
 // Constant definitions --------------------------------------------------------
-#define USERS_DIRNAME "../userData"   // Folder name to be loaded (users' data)
-#define MAX_USERS 1000             // Max number of users to be loaded
-#define ERROR_COLOR 4              // Color displayed in error messages
-#define LOGIN_COLOR 2              // Display color for login (windons.h)
-#define CONFIRMATION_COLOR 3       // Color for confirmation (attention) text
-#define LOGOUT_COLOR 5             // Display color for logout (windons.h)
-#define ATT_COLOR 5                // Attention color (target library only)
-#define CHAR_IGNORE 10000          // Characters to ignore after a cin read
+#define USERS_DIRNAME "../userData"  // Folder name to be loaded (users' data)
+#define MAX_USERS 1000               // Max number of users to be loaded
+#define ERROR_COLOR 4                // Color displayed in error messages
+#define LOGIN_COLOR 2                // Display color for login (windons.h)
+#define CONFIRMATION_COLOR 3         // Color for confirmation (attention) text
+#define LOGOUT_COLOR 5               // Display color for logout (windons.h)
+#define ATT_COLOR 5                  // Attention color (target library only)
+#define CHAR_IGNORE 10000            // Characters to ignore after a cin read
 #define SYMBOLS_PASSWORD "~`!@#$%^&*()_-+={[}]|:;'<,>.?/" // Symbols permited
-#define MINIMUM_CHAR_PASSWORD 10   // Minimum number of characters in a password
-#define HIDEN_CHAR '*'             // Character to be displayed in hiden password
+#define MINIMUM_CHAR_PASSWORD 10     // Minimum number of characters in a password
+#define HIDEN_CHAR '*'               // Character to be displayed in hiden password
+#define ELAPSED_UPDATE_TIME_S 60*1   // Minimum elapsed time for an update
 
 class app {
 
@@ -48,12 +50,14 @@ private:
     library *cLibrary;           // Currant library that is been used
     library *loadedLibrary;      // Loaded library with all items
     library *userItems;          // User landed items (loaded from file)
-    user *cUser;                 // Current user logged
     std::vector<user*> allUsers; // Save all clients in the library
+    user *cUser;                 // Current user logged
     bool isLogged; // Boolean variable to control if there is a user logged
     bool isAdm;                  // Boolean to check if it is a adm logged
-    HANDLE  hConsole;            // To handle the display
     bool toBreak;                // Boolean variable to break the menu option
+    HANDLE  hConsole;            // To handle the display
+    std::chrono::time_point<std::chrono::system_clock> start;  // Start time 
+    std::chrono::time_point<std::chrono::system_clock> lastUp; // Last update
 
 // ----------------------------------------------------------------------------
 // Class member functions
@@ -84,6 +88,7 @@ private:
     void removeItem(void);           // Function to remove an item
     void removeClient(void);         // Function to remove a client
     void returnItem(void);           // Function to return an item
+    int update(void);                // Function to update the loaded library
 
 };
 

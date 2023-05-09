@@ -9,12 +9,12 @@
 
 // Includes --------------------------------------------------------------------
 #include <string>
+#include <typeinfo>
 #include <iostream>
 #include <dirent.h>
 #include <sys/types.h>
 #include <fstream>
 #include <vector>
-#include <typeinfo>
 #include "../lib/media/DVD.h"
 #include "../lib/media/book.h"
 #include "../lib/media/CD.h"

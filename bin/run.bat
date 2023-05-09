@@ -26,7 +26,7 @@ echo lib files = %counter%
 
 
 rem Compile all files -----------------------------------------------------------
-echo Starting building...
+echo Starting build...
 start /B /wait g++ ../src/*.cpp ../lib/media/*.cpp ../lib/user/*.cpp -o main.exe
 echo Project compiled.
 

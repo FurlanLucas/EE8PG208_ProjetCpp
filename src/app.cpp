@@ -3,8 +3,11 @@
 
 app::app(void)
     : toBreak(false)
-    , isLogged(false)
-    , isAdm(false) {
+    , isLogged(false) // Set as false (not logged)
+    , isAdm(false) // Set as false (not adm)
+    , start(std::chrono::high_resolution_clock::now()) // Time start
+    , lastUp(start) // Last update in loadedLibrary
+    {
 
     // First displays
     system("CLS");
@@ -39,6 +42,13 @@ app::~app(void){
 
     SetConsoleTextAttribute(hConsole, 15); // Sets the cmd to normal mode
 
+    // Time display
+    std::chrono::time_point<std::chrono::system_clock> end;
+    end = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end - start;
+    std::cout << "Elapsed time: " << elapsed_seconds.count()<< "s\n";
+
+    // Ending
     std::cout << "Thank you for using our application." << std::endl;
     std::cout << "Exiting application." << std::endl;
     delete loadedLibrary;
@@ -57,6 +67,9 @@ int app::menu(void){
 
         // Take the option and check if it is a valid integer number
         int option = takeIntChoice();
+
+        // Tries to update the loadedLibrary obj.
+        update();
 
         // Main option
         switch (option) {
@@ -1343,4 +1356,33 @@ void app::returnItem(void){
     }
 
     return;
+}
+
+
+int app::update(void){
+    // Function to update the library
+    std::chrono::time_point<std::chrono::system_clock> localEnd;
+    localEnd = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = localEnd - lastUp;    
+    double total = elapsed_seconds.count();
+
+    // Compares if its necessary to update
+    if(total > ELAPSED_UPDATE_TIME_S){
+        lastUp = localEnd;
+        std::cout << "Reloading library..." << std::endl;
+        cLibrary = new library;
+
+        // Tries to reload
+        if(loadedLibrary->loadItems()){
+            std::cout << "Error loading files. Exiting." << std::endl;
+            exit(1);
+        }
+        else{
+            std::cout << "All " << loadedLibrary->getItemsNumber() << 
+                " items were loaded sucessfully." << std::endl;
+        }
+
+    }
+
+    return 0;
 }

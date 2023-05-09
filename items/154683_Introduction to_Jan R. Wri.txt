@@ -4,9 +4,9 @@ Jan R. Wright & Jonathan E. Cooper
 Introduction to aircraft aeroelasticity and loads
 65
 2015
-5
+4
 2
 543
 Aerospace Series
-Wiley
 This book, Introduction to Aircraft Aeroelasticity and Loads, provides a welcome update to the first edition. Containing a range of revised material, the same approach is used as before, employing simple mathematical models to guide the reader towards an understanding of key underlying concepts relating to both aeroelasticity and loads. Of particular note is the frequent reference to the airworthiness certification procedures for civil aircraft, with the final section providing an introduction to current industrial practice. The companion website provides a number of computer codes that can be used to gain further understanding of the mathematical models that are discussed within the book.
+Wiley
