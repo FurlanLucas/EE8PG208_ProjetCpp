@@ -278,13 +278,13 @@ void app::showItemDescription(void){
     if(cLibrary->getItemsNumber()!=0){
         // Ckeck if the choice is possible
         if(toDisplay<cLibrary->getItemsNumber())
-            cLibrary->showItemDes(toDisplay-1);
+            cLibrary->showItemDes(--toDisplay);
         else
             std::cout << "There is no such item in current library.\n";
     }
     else{
         if(toDisplay<loadedLibrary->getItemsNumber())
-            loadedLibrary->showItemDes(toDisplay-1);
+            loadedLibrary->showItemDes(--toDisplay);
         else
             std::cout << "There is no such item in current library.\n";
     }
@@ -729,7 +729,7 @@ int app::addItem(void){
     int localOption;               // Takes the option for the menu display (local)
     bool localBreak = false;       // Controls the while loop for the menu (local)
     int itemNumber;                // Number of the item to be added
-    library* &target = (cLibrary->getItemsNumber()>0) ? cLibrary : loadedLibrary;
+    library* &target = cLibrary->getItemsNumber() ? cLibrary : loadedLibrary;
 
     MENU:
     // Display options of item
@@ -873,7 +873,7 @@ int app::addItem(void){
     std::cout << "Wich item do you want to add? ";
     itemNumber = takeIntChoice();
     std::cout << "Item description:\n" << std::endl;
-    target->showItemDes(itemNumber);
+    target->showItemDes(--itemNumber);
     
     std::cout << "\nAre you sure that you want to add one of this item?\n";            
     std::cout << " [1] Yes" << std::endl;
@@ -882,7 +882,7 @@ int app::addItem(void){
     std::cout << "\nEnter your option: ";
     localOption = takeIntChoice();
 
-    if(--itemNumber >= target->getItemsNumber() || itemNumber < 0){
+    if(itemNumber >= target->getItemsNumber() || itemNumber < 0){
         std::cout << "There is no such item in the library." << std::endl;
         goto ADD_ITEM_MENU;
     }
