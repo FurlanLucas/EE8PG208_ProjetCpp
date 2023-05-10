@@ -91,9 +91,15 @@ int app::menu(void){
             break;
 
         case 5: // [5] Return to general library
-            system("CLS");            
-            cLibrary = new library;
-            break;
+            if(cLibrary->getItemsNumber()){
+                system("CLS");            
+                cLibrary = new library;
+                break;
+            }
+            else{
+                displayInvalidChoice();
+                break;
+            }
 
         case 6: // [6] Logout/Login
             if (isLogged)
@@ -180,8 +186,10 @@ void app::displayMenuOptions(void){
     std::cout << " [1] Search for an item" << std::endl;
     std::cout << " [2] Show all items" << std::endl;
     std::cout << " [3] Show items description" << std::endl;        
-    std::cout << " [4] Lend item" << std::endl;                
-    std::cout << " [5] Return to general library" << std::endl;
+    std::cout << " [4] Lend item" << std::endl;   
+
+    if(cLibrary->getItemsNumber())             
+        std::cout << " [5] Return to general library" << std::endl;
 
     if (isLogged){
         std::cout << " [6] Logout" << std::endl;
