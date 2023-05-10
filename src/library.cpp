@@ -209,7 +209,7 @@ void library::showItems(void){
 
     // Label display
     std::cout << "\n\n  N \t Reference \t Title \t\t\t\t\t\t\t Autor \t\t\t\t\t" <<
-        "Number \t Year \t Type" << std::endl;
+        "Number \t Year \t Type\n";
 
     // Item display
     int i = 1;
@@ -267,7 +267,7 @@ library *library::search(std::string nameToSearch){
 
 int library::getItemsNumber(void){
     // Function to get the currant itemsNumber variable.
-    return items.size();
+    return (int) items.size();
 }
 
 

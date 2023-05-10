@@ -46,7 +46,7 @@ app::~app(void){
     std::chrono::time_point<std::chrono::system_clock> end;
     end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
-    std::cout << "Elapsed time: " << elapsed_seconds.count()<< "s\n";
+    std::cout << "Elapsed time: " << elapsed_seconds.count()<< " s.\n";
 
     // Ending
     std::cout << "Thank you for using our application." << std::endl;
@@ -610,7 +610,7 @@ int app::newClientUser(void){
     // Try to create the user (automatic login)
     try{        
         allUsers.push_back(new client(name, surname, email, password,
-            allUsers.size()+1));
+            (int) allUsers.size() + 1));
         cUser = allUsers[allUsers.size()-1];
         cUser->save(USERS_DIRNAME);
         userItems = new library("NULL");
@@ -1006,7 +1006,7 @@ std::string app::takeSecretPassword(std::string informationName){
     
     // Infinite loop
     for(int i=0;;){
-        a = getch();
+        a = (char) getch();
         if(a!='\b' && a!='\0' && a!='\r'){
             password.push_back(a); //stores a in pass
             std::cout << HIDEN_CHAR;
