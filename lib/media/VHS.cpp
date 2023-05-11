@@ -40,11 +40,12 @@ int VHS::searchFor(std::string toSearch){
     // Try to find the string input
     std::size_t foundAuthor = newAuthor.find(toLowercase(toSearch));
     std::size_t foundTitle = newTitle.find(toLowercase(toSearch));
-    std::size_t foundProduction = newProduction.find(toLowercase(toSearch));
+    std::size_t foundProduction = newProduction.find(toLowercase(toSearch));    
+    std::size_t foundType = toLowercase(toSearch).find("vhs");
 
     // Verify if it was found
     if(foundTitle!=std::string::npos || foundAuthor!=std::string::npos ||
-        foundProduction!=std::string::npos)
+        foundProduction!=std::string::npos || foundType!=std::string::npos)
         return 1; // Candidate found
     return 0; // Candidate not found
 }

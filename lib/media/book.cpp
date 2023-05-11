@@ -48,11 +48,13 @@ int book::searchFor(std::string toSearch){
     std::size_t foundAuthor = newAuthor.find(toLowercase(toSearch));
     std::size_t foundTitle = newTitle.find(toLowercase(toSearch));
     std::size_t foundCollection = newCollection.find(toLowercase(toSearch));
-    std::size_t foundEditor = newEditor.find(toLowercase(toSearch));
+    std::size_t foundEditor = newEditor.find(toLowercase(toSearch));    
+    std::size_t foundType = toLowercase(toSearch).find("book");
 
     // Verify if it was found
     if(foundTitle!=std::string::npos || foundAuthor!=std::string::npos ||
-        foundCollection!=std::string::npos || foundEditor!=std::string::npos)
+        foundCollection!=std::string::npos || foundEditor!=std::string::npos ||
+        foundType!=std::string::npos)
         return 1; // Candidate found
     return 0; // Candidate not found
 }
