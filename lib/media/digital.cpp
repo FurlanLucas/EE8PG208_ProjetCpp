@@ -43,10 +43,13 @@ int digital::searchFor(std::string toSearch){
     std::size_t foundAuthor = newAuthor.find(toLowercase(toSearch));
     std::size_t foundTitle = newTitle.find(toLowercase(toSearch));   
     std::size_t foundType = toLowercase(toSearch).find("digital");
+    std::size_t foundYear = std::to_string(year).find(toSearch); 
+    std::size_t foundReference = std::to_string(reference).find(toSearch);
 
     // Verify if it was found
     if(foundTitle!=std::string::npos || foundAuthor!=std::string::npos ||
-        foundType!=std::string::npos)
+        foundType!=std::string::npos || foundYear!=std::string::npos || 
+        foundReference!=std::string::npos)
         return 1; // Candidate found
     return 0; // Candidate not found
 }
